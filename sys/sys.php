@@ -78,25 +78,15 @@ if( isset($_FILES['file']) )
 			$totalInfo .= '<p>Pliki dodane do archiwum: '.$info.'</p>';
 			$totalInfo .= downloadZip();// Link do zipa
 		}
-
-		
-
-
-		
-
-		// Czyszczenie folderów
-		clearDir('files_upload');
-		clearDir('miniatures');
 	}
 }
 
 
 
 
-//TODO: 5 - Sprzątanie, usuwanie zipów i plików po wykonaniu wszystkiego
 //TODO: 6 - Wygląd, poprawa wyglądu
 //TODO: 7 - Wodotryski, wygląd
 //TODO: 7a - Po wybraniu jednostki jej symbol pojawia się obok pola Szer./Wys.
 //TODO: 7b - Opisy pola po najechaniu na znak "?" w tooltipie
-//TODO: 7c - bootstrapowe confirmy
+//TODO: 7c - bootstrapowe confirmy i progres bary
 ?>
