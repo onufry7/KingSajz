@@ -42,12 +42,13 @@
 				<div class="fild" id="szerokosc">
 					<label for="szer">Szerokość: </label>
 					<input type="number" id="szer" name="width" min="1" value="<?=keep(['width']);?>">
-
+					<span></span>
 				</div>
 
 				<div class="fild" id="wysokosc">
 					<label for="wys">Wysokość: </label>
 					<input type="number" id="wys" name="height" min="1" value="<?=keep(['height']);?>">
+					<span></span>
 				</div>
 
 				<div class="fild">

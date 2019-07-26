@@ -1,5 +1,9 @@
+/************************
+ *	Podstawowe funkcje	* 
+ *	------------------	*
+ ************************/
 
-//Sprawdza liczbę wybranych plików
+// Sprawdza liczbę wybranych plików
 function countFiles()
 {
 	let count = $('#file').prop('files')['length'];
@@ -11,12 +15,10 @@ function countFiles()
 }
 
 
-//Obsługa selectboxów (zachowania proporcji)
-//Blokowanie - odblokowanie pól
+// Obsługa przycisków skali
 function scale()
 {
 	let value = $('input[name="scale"]:checked').val();
-
 	switch(value)
 	{
 		case 'width':
@@ -37,7 +39,36 @@ function scale()
 }
 
 
-// wywołuje czyszczenie plików
+// Dodanie jednostki do szer. i wys.
+function setUnit()
+{
+	let value = $('input[name="unit"]:checked').val();
+	switch(value)
+	{
+		case 'percent':
+			$('input#szer + span').text( ' % ' );
+			$('input#wys  + span').text( ' % ' );
+			break;
+
+		case 'px':
+			$('input#szer + span').text( ' px ' );
+			$('input#wys  + span').text( ' px ' );
+			break;
+
+		case 'cm':
+			$('input#szer + span').text( ' cm ' );
+			$('input#wys  + span').text( ' cm ' );
+			break;
+
+		case 'mm':
+			$('input#szer + span').text( ' mm ' );
+			$('input#wys  + span').text( ' mm ' );
+			break;
+	}
+}
+
+
+// Wywołuje czyszczenie plików
 function clearDir()
 {
 	setTimeout(function(){
@@ -56,6 +87,16 @@ function forceDownload()
 	}, 2000);
 }
 
+
+
+
+
+
+
+/********************************************
+ *	Okienka dialogowe i wskaźniki postępu	* 
+ *	-------------------------------------	*
+ ********************************************/
 
 // Postęp pobierania pliku
 function progressBarrDownload()
@@ -94,14 +135,30 @@ function progressBarrDownload()
 
 
 
+
+
+
+
+/************************************
+ *	Wywołania po załadowaniu strony	* 
+ *	-------------------------------	*
+ ************************************/
 document.addEventListener('DOMContentLoaded', function(event) {
+	
+	// Selectboxy ustawienia jednostki
+	$('input[name="unit"]').click(setUnit);
+	setUnit();
 
-	scale() //Selectboxy ustawienia skali
-	$('input[name="scale"]').click(scale); //Selectboxy ustawienia skali
-	$('#file').change(countFiles); //Liczba wybranych plików
-	$('a[download]').each(forceDownload);
+	// Selectboxy ustawienia skali
+	$('input[name="scale"]').click(scale);
+	scale();
+
+	// Liczba wybranych plików
+	$('#file').change(countFiles); 
+
+	// Automatyczne pobieranie i progres bar
+	$('a[download]').each(forceDownload); 
 	$('a[download]').click(progressBarrDownload);
-
 });
 
 

@@ -84,9 +84,15 @@ if( isset($_FILES['file']) )
 
 
 
-//TODO: 6 - Wygląd, poprawa wyglądu
-//TODO: 7 - Wodotryski, wygląd
-//TODO: 7a - Po wybraniu jednostki jej symbol pojawia się obok pola Szer./Wys.
-//TODO: 7b - Opisy pola po najechaniu na znak "?" w tooltipie
-//TODO: 7c - bootstrapowe confirmy i progres bary
+//TODO: 7 - Wodotryski, wygląd:
+//TODO: 7 - Opisy pola po najechaniu na znak "?" w tooltipie
+//TODO: 7c - bootstrapowe confirmy i/lub progres bary
+//TODO: 7c II 	- upload
+//TODO: 7c III 	- przetwarzanie rozmiaru
+
+
+//TODO: 8 - Wygląd, poprawa wyglądu
+//TODO: 9 - Teksty komunikatów i opisów poprawić
+//TODO: 10 - Refraktoryzacja kodu
+
 ?>
