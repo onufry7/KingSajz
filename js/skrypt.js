@@ -83,7 +83,7 @@ function forceDownload()
 {
 	setTimeout(function(){
 		progressBarrDownload();
-		window.location = $('a[download]').attr('href');
+		window.location = $('a[download]').attr('href');	
 	}, 2000);
 }
 
@@ -104,7 +104,7 @@ function progressBarrDownload()
 	let xhr = new XMLHttpRequest(); // Tworzymy obiekt
 
 	//typ połączenia, url, czy połączenie asynchroniczne
-	xhr.open("GET", "http://localhost/kingsajz/miniatures/your-images.zip", true);
+	xhr.open("GET", "miniatures/your-images.zip", true);
 
 	// Sprawdzamy postęp
 	xhr.addEventListener('progress', function(e) {
@@ -135,6 +135,47 @@ function progressBarrDownload()
 
 
 
+// Postęp wysyłania plików
+function progresBarrUpload()
+{
+	let xhr = new XMLHttpRequest(); // Tworzymy obiekt
+	let count = $('#file').prop('files')['length'];	
+	let data = new FormData();
+	for(let i=0 ; i<count ; i++)
+	{
+		data.append('files', $('#file').prop('files')[i]);
+	}
+
+	//typ połączenia, url, czy połączenie asynchroniczne
+	xhr.open("POST", "index.php", true);
+
+	// Sprawdzamy postęp
+	xhr.upload.addEventListener('progress', function(e) {
+	    if (e.lengthComputable) {
+	        const progress = (e.loaded / e.total)*100;
+	        $('progress').val(progress);
+	    }
+	});
+
+	// Koniec połączenia
+	xhr.addEventListener('load', function() {
+        if (this.status === 200) {
+            console.log('Zakończono wysyłanie');
+        } else {
+            console.log('Połączenie zakończyło się statusem ' + this.status)
+        }
+    });
+
+	// Wyświetlamy błędy
+	xhr.addEventListener('error', function(e) {
+        console.log('Wystąpił błąd połączenia');
+    });
+
+	//wysyłamy połączenie
+	xhr.send(data);
+}
+
+
 
 
 
@@ -159,6 +200,9 @@ document.addEventListener('DOMContentLoaded', function(event) {
 	// Automatyczne pobieranie i progres bar
 	$('a[download]').each(forceDownload); 
 	$('a[download]').click(progressBarrDownload);
+
+	$('input[type="submit"]').click(progresBarrUpload);
+
 });
 
 
