@@ -8,7 +8,7 @@
 		<meta name="keywords" content="">	
 		<link rel="stylesheet" href="css/style.css">
 		<script src="js/jquery-3.4.1.min.js"></script>
-		<script async src="js/skrypt.js"></script>
+		<script src="js/skrypt.js"></script>
 		<title>KingSajz</title>
 	</head>
 

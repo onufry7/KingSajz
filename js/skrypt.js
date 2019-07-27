@@ -201,9 +201,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 	$('a[download]').each(forceDownload); 
 	$('a[download]').click(progressBarrDownload);
 
+	// progres barr dla uploadu
 	$('input[type="submit"]').click(progresBarrUpload);
 
 });
-
-
-
