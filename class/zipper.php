@@ -4,20 +4,12 @@
 class Zipper extends ZipArchive
 {
 	private $listFiles = []; // Lista plików
-	private $srcIn = 'miniatures'; // Ścieszka odczytu
-	private $srcOut = 'miniatures'; // Ścieszka zapisu
-
-
-	public function __construct()
-	{
-		// Tworzy listę plików
-		$this->createListFiles();
-	}
-
+	private $srcIn = '../miniatures'; // Ścieszka odczytu
+	private $srcOut = '../miniatures'; // Ścieszka zapisu
 
 
 	// Tworzy listę plików
-	private function createListFiles()
+	public function createListFiles()
 	{
 		if( is_dir($this->srcIn) )
 		{	// Skanujemy folder w poszukiwaniu plików
@@ -26,18 +18,14 @@ class Zipper extends ZipArchive
 				// i zapisujemy pliki do tablicy
 				if( is_file($file) ) $this->listFiles[] = basename($file);
 			}
+			return true;
 		}
-		else    // Jeśli odwołamy się do czegoś innego niż folder
-		{	
-			echo 'Folder źródłowy nie jest katalogiem.';
-			return false;
-		}
+		return false;
 	}
 
 
 
-
-
+	// Tworzenie pliku zip
 	public function createZip()
 	{
 		if($this->open("$this->srcOut/your-images.zip", ZipArchive::CREATE) === TRUE)
@@ -53,9 +41,6 @@ class Zipper extends ZipArchive
 		else return false;
 	}
 
-	
-
-	
 }
 
 

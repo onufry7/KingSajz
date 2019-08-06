@@ -1,22 +1,19 @@
-/************************
- *	Podstawowe funkcje	* 
- *	------------------	*
- ************************/
+/****************************
+ *	 Podstawowe funkcje JS  * 
+ *	 ---------------------  *
+ ****************************/
 
-// Sprawdza liczbę wybranych plików
-function countFiles()
+// Ustawia liczbę wybranych plików
+function setCountFiles()
 {
-	let count = $('#file').prop('files')['length'];
-	$('#count').val(count);
+	let countFiles = $('#file').prop('files')['length'];
+	$('input#count').val(countFiles);
+}	
 
-	$.post( "sys/ajax.php", {count:"true"}, function( data ){
-		if(count > data) alert("Maksymalna liczba plików to: "+data);
-	}, "text");
-}
 
 
 // Obsługa przycisków skali
-function scale()
+function setScale()
 {
 	let value = $('input[name="scale"]:checked').val();
 	switch(value)
@@ -37,6 +34,7 @@ function scale()
 			$('div#wysokosc').show();
 	}
 }
+
 
 
 // Dodanie jednostki do szer. i wys.
@@ -68,111 +66,298 @@ function setUnit()
 }
 
 
-// Wywołuje czyszczenie plików
-function clearDir()
+
+// Zmienia status zadania
+function setStatus(text)
 {
-	setTimeout(function(){
-		$.post( "sys/ajax.php", {clear:"true"} );
-		$('a[download]').remove();
-	}, 2000);
+	$("#status").empty().append(text);	
 }
+
 
 
 // Wymusza pobranie pliku
 function forceDownload()
 {
-	setTimeout(function(){
-		progressBarrDownload();
-		window.location = $('a[download]').attr('href');	
-	}, 2000);
+	fileDownload();
+	window.location = $('a[download]').attr('href');	
 }
 
 
 
+// Tworzy link do pobrania
+function createLink()
+{
+	const body = document.querySelector("body");
+	const a = document.createElement("a");
+	a.setAttribute("href", "miniatures/your-images.zip");
+	a.setAttribute("download", "images.zip");
+	a.setAttribute("type", "application/zip");
+	a.innerText = "images.zip";
+	//a.classList.add("module");
+	body.appendChild(a);
+	$('a[download]').click(fileDownload);
+}
 
+
+
+// Wywołuje funkcje zależnie od statusu
+function statusListener()
+{
+	let status = $('#status').text();
+
+	switch (status)
+	{
+		case 'Sprawdzam dane...':
+			break;
+
+		case 'Przesyłanie plików...':
+			break;
+		
+		case 'Zakończono przesyłanie.':
+			setTimeout(resizeFile, 1000);
+			break;
+
+		case 'Zmiana wielkości plików...':
+			break;
+
+		case 'Zmieniono wielkość.':
+		 	setTimeout(createZip, 800);
+		 	break;
+
+		case 'Tworzenie pliku zip...':
+		 	break;
+
+		
+		case 'Zip gotowy.':
+			createLink();
+		 	setTimeout(forceDownload, 500);
+		 	break;
+
+		case 'Pobieranie pliku...':
+		 	break;
+
+		case 'Pobieranie zakończone.':
+		 	setTimeout(cleaner, 2000);
+		 	break;
+	}
+}
 
 
 
 /********************************************
- *	Okienka dialogowe i wskaźniki postępu	* 
- *	-------------------------------------	*
+ * Obsługa formularza, paski postępu, ajaxy *     
+ * ---------------------------------------- *
  ********************************************/
 
-// Postęp pobierania pliku
-function progressBarrDownload()
+// Wysłanie formularza
+function sendForm()
 {
-	let xhr = new XMLHttpRequest(); // Tworzymy obiekt
+	// Dodatkowe pola
+	let totalSize = 0; // Rozmiar wszystkich plików
+	let files = $('#file')[0].files;
+	for (let i=0; i<files.length; i++) totalSize += files[i].size;
 
-	//typ połączenia, url, czy połączenie asynchroniczne
-	xhr.open("GET", "miniatures/your-images.zip", true);
+	// Przygotowanie danych
+	let data = new FormData();
+	let inputs = $('#form').serializeArray();
+	inputs.push({name:'size', value:totalSize, name:'send', value:'true' });
+	$.each(inputs, function (key, input){ data.append(input.name, input.value); });
+	data.append('key', 'value'); 
 
-	// Sprawdzamy postęp
-	xhr.addEventListener('progress', function(e) {
-	    if (e.lengthComputable) {
-	        const progress = (e.loaded / e.total)*100;
-	        $('progress').val(progress);
-	    }
-	});
-
-	// Koniec połączenia
-	xhr.addEventListener('load', function() {
-        if (this.status === 200) {
-            console.log('Plik został pobrany');
-            clearDir();
-        } else {
-            console.log('Połączenie zakończyło się statusem ' + this.status)
-        }
-    });
-
-	// Wyświetlamy błędy
-	xhr.addEventListener('error', function(e) {
-        console.log('Wystąpił błąd połączenia');
-    });
-
-	//wysyłamy połączenie
-	xhr.send();
+	// Zapytanie ajax
+	$.ajax(
+	{
+	    url: "sys/ajax.php",
+	    method: "POST",
+	    processData: false,
+	    contentType: false,
+	    dataType:'json',
+	    data: data
+	})
+	.done(function(result)
+    {
+        $("#errors").empty(); // Czyści błędy
+        if(result.status == "success") filesUpload(); // Wysyła pliki
+        else $("#errors").append(result.info); // Wyświetla błędy
+    })
+	.fail(error => console.log(error));
 }
 
 
 
-// Postęp wysyłania plików
-function progresBarrUpload()
+// Wysłanie plików
+function filesUpload()
 {
-	let xhr = new XMLHttpRequest(); // Tworzymy obiekt
-	let count = $('#file').prop('files')['length'];	
+	let ajax = new XMLHttpRequest();
 	let data = new FormData();
-	for(let i=0 ; i<count ; i++)
-	{
-		data.append('files', $('#file').prop('files')[i]);
+	let error = false;
+	
+	// Przetwarza pliki z formularza
+	let files = $('#file')[0].files;
+	for (let i=0; i<files.length; i++) data.append("files[]", files[i]);
+	data.append('key', 'value');
+	
+	// Ajax xhr
+	ajax.open("POST", "sys/upload-files.php");
+	ajax.addEventListener("loadstart", loadStart, false);
+	ajax.upload.addEventListener("progress", progressTransfer, false);
+	ajax.addEventListener("load", loadTransfer, false);
+	ajax.addEventListener("error", errorTransfer, false);
+	ajax.addEventListener("abort", abortTransfer, false);
+	ajax.addEventListener("loadend", loadEnd, false);
+	ajax.send(data);
+
+	// Rozpoczęcie pobierania
+	function loadStart() {
+		setStatus('Przesyłanie plików...');
 	}
 
-	//typ połączenia, url, czy połączenie asynchroniczne
-	xhr.open("POST", "index.php", true);
+	// Pasek postępu
+	function progressTransfer(e) {
+		const progress = (e.loaded / e.total)*100;
+		$('#uploadBar').val(progress);
+	}
 
-	// Sprawdzamy postęp
-	xhr.upload.addEventListener('progress', function(e) {
-	    if (e.lengthComputable) {
-	        const progress = (e.loaded / e.total)*100;
-	        $('progress').val(progress);
-	    }
-	});
+	// Zakończenie przesyłania
+	function loadTransfer() {
+		if (this.status === 200) $("#info").append(this.response);
+		else // Status inny niż 200 = błąd
+		{
+			if(this.status !== 'undefined')
+				$("#errors").empty().append('Połączenie zakończyło się statusem '+this.status);
+			else 
+				$("#errors").empty().append('Wystąpił nieokreślony błąd');
+			error=true;
+		} 
+	}
 
-	// Koniec połączenia
-	xhr.addEventListener('load', function() {
-        if (this.status === 200) {
-            console.log('Zakończono wysyłanie');
-        } else {
-            console.log('Połączenie zakończyło się statusem ' + this.status)
-        }
-    });
+	// Błędy i anulowanie
+	function errorTransfer(){$("#errors").empty().append('Błąd wysyłania');error=true;}
+	function abortTransfer(){$("#errors").empty().append('Anulowanie wysyłania');error=true;}
 
-	// Wyświetlamy błędy
-	xhr.addEventListener('error', function(e) {
-        console.log('Wystąpił błąd połączenia');
-    });
+	// Koniec wysyłania
+	function loadEnd() 
+	{ 
+		if(error)
+		{
+			$('#uploadBar').val(0);
+			return false;
+		}
 
-	//wysyłamy połączenie
-	xhr.send(data);
+		$("#errors").empty();
+		setStatus('Zakończono przesyłanie.');
+	}
+}
+
+
+
+// Włącza zmiane rozmiaru plików
+function resizeFile()
+{
+	setStatus('Zmiana wielkości plików...');
+	
+	let inputs = $('#form').serializeArray();
+	inputs.push({name:'resize', value:'true'});
+
+	$.post( "sys/ajax.php", inputs, function( data ){
+		
+		// Czyścimy błędy
+		$("#errors").empty();
+		
+		// Zwracamy wyniki
+		if( data.status == "error" ) $("#errors").append(data.info);
+		else if( data.status == "success" )
+		{
+			$("#info").append(data.info);
+			setStatus('Zmieniono wielkość.');
+		} 
+	}, "json");
+}
+
+
+
+// Przygotowanie zipa do pobrania
+function createZip()
+{
+	setStatus('Tworzenie pliku zip...');
+
+	$.post( "sys/ajax.php", {zip:"true"}, function( data ){
+		
+		// Czyścimy błędy
+		$("#errors").empty();
+		
+		// Zwracamy wyniki
+		if( data.status == "error" )
+		{
+			$("#errors").append(data.info);
+			$("#status").empty();
+		}
+		else if( data.status == "success" )
+		{
+			$("#info").append(data.info);
+			setStatus('Zip gotowy.');
+		} 
+	}, "json");
+}
+
+
+
+// Postęp pobierania pliku
+function fileDownload()
+{
+	// Wyłączamy bo użycie metody GET wywoła reload strony
+	$(window).off( "beforeunload"); 
+
+	let xhr = new XMLHttpRequest();
+	
+	xhr.open("GET", "miniatures/your-images.zip", true);
+	xhr.addEventListener("loadstart", loadStart, false);
+	xhr.addEventListener("progress", progressTransfer, false);
+	xhr.addEventListener("load", loadTransfer, false);
+	xhr.addEventListener("error", errorTransfer, false);
+	xhr.addEventListener("abort", abortTransfer, false);
+	xhr.send();
+
+	// Rozpoczęcie pobierania
+	function loadStart() {
+		setStatus('Pobieranie pliku...');
+	}
+
+	// Pasek postępu
+	function progressTransfer(e) {
+		const progress = (e.loaded / e.total)*100;
+		$('#downloadBar').val(progress);
+	}
+
+	// Zakończenie przesyłania
+	function loadTransfer() {
+		if (this.status === 200)
+		{
+			setStatus('Pobieranie zakończone.');
+			// Pobraliśmy już plik więc włączamy czyszczenie z powrotem
+			$(window).on( "beforeunload", cleaner);
+		}
+		else // Status inny niż 200 = błąd
+		{
+			if(this.status !== 'undefined')
+				$("#errors").empty().append('Połączenie zakończyło się statusem '+this.status);
+			else 
+				$("#errors").empty().append('Wystąpił nieokreślony błąd');
+		} 
+	}
+
+	// Błędy i anulowanie
+	function errorTransfer(){$("#errors").empty().append('Błąd pobierania');}
+	function abortTransfer(){$("#errors").empty().append('Anulowanie pobierania');}
+}
+
+
+
+// Wywołuje czyszczenie plików
+function cleaner()
+{
+	$.post( "sys/ajax.php", {clean:"true"} );
+	$('a[download]').remove();
 }
 
 
@@ -180,28 +365,32 @@ function progresBarrUpload()
 
 
 
-/************************************
- *	Wywołania po załadowaniu strony	* 
- *	-------------------------------	*
- ************************************/
+
+/*************************************
+ *	Wywołania po załadowaniu strony  * 
+ *	-------------------------------  *
+ *************************************/
 document.addEventListener('DOMContentLoaded', function(event) {
 	
 	// Selectboxy ustawienia jednostki
-	$('input[name="unit"]').click(setUnit);
-	setUnit();
-
+	$('input[name="unit"]').click(setUnit); setUnit();
+	
 	// Selectboxy ustawienia skali
-	$('input[name="scale"]').click(scale);
-	scale();
+	$('input[name="scale"]').click(setScale); setScale();
 
 	// Liczba wybranych plików
-	$('#file').change(countFiles); 
+	$('#file').change(setCountFiles);
 
-	// Automatyczne pobieranie i progres bar
-	$('a[download]').each(forceDownload); 
-	$('a[download]').click(progressBarrDownload);
+	// Wysłanie plików
+	$('#form').submit(function(event){
+		event.preventDefault();
+		sendForm();
+	});
 
-	// progres barr dla uploadu
-	$('input[type="submit"]').click(progresBarrUpload);
+	// Nasłuchiwanie statusu
+	$('#status').on('DOMSubtreeModified', statusListener);
+
+	// Czyszczenie przy zamknięciu i odświerzeniu strony
+	$(window).on( "beforeunload", cleaner);
 
 });

@@ -5,8 +5,8 @@
  */
 class Resize
 {
-	private $srcIn = 'files_upload'; // Ścieszka odczytu
-	private $srcOut = 'miniatures'; // Ścieszka zapisu
+	private $srcIn = '../files_upload'; // Ścieszka odczytu
+	private $srcOut = '../miniatures'; // Ścieszka zapisu
 	private $scale = null; // Co skalujemy
 	private $unit = null; // W jakich jednostkach
 	private $height = null; // Do jakiej wysokości
@@ -15,7 +15,7 @@ class Resize
 
 	public function __construct()
 	{
-		// Inicjuje zmienne
+		// Inicjuje zmienne //TODO NIe czyta $_POST
 
 		if( isset($_POST['scale']) && !empty($_POST['scale']) ) 
 			$this->scale = $_POST['scale'];
@@ -28,15 +28,12 @@ class Resize
 		
 		if( isset($_POST['unit']) && !empty($_POST['unit']) ) 
 			$this->unit = $_POST['unit'];
-
-		// Tworzy listę plików
-		$this->getFiles();
 	}
 
 
 
 	// Tworzy listę plików z informacjami o nich
-	private function getFiles()
+	public function getFiles()
 	{ 
 		if( is_dir($this->srcIn) )
 		{	// Skanujemy folder w poszukiwaniu plików
@@ -45,12 +42,9 @@ class Resize
 				// i zapisujemy pliki do tablicy
 				if( is_file($file) ) $this->files[] = $file;
 			}
+			return true;
 		}
-		else    // Jeśli odwołamy się do czegoś innego niż folder
-		{	
-			echo 'Folder źródłowy nie jest katalogiem.';
-			return false;
-		}
+		else return false; // Jeśli odwołamy się do czegoś innego niż folder
 	}
 
 
@@ -69,6 +63,9 @@ class Resize
 				$filename = $info['filename'];
 				$extension = $info['extension'];
 
+				// Flaga dla błędów
+				$skip = false;
+
 				// Tworzymy obraz odpowiedniego typu
 				switch ($extension) {
 					
@@ -80,11 +77,14 @@ class Resize
 						break;
 					
 					case 'gif': $img = imagecreatefromgif($file);
-						break;
+					 	break;
 					
-					default: return false;
+					default: $skip = true;
 						break;
 				}
+
+				// Jeśli plik jest błędny to go pomija
+				if($skip == true) continue;
 
 
 				//Pobranie orginalnych rozmiarów
