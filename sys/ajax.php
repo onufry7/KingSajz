@@ -30,43 +30,48 @@ if( isset($_POST['send']) && $_POST['send']=="true" )
 
 
 
-// Zmiana rozmiaru plików
-if( isset($_POST['resize']) && $_POST['resize']=='true' )
-{    
+// Sprawdza folder
+if( isset($_POST['checkdir']) && $_POST['checkdir']=='true' )
+{
 	// Sprawdza czy katalog jest pusty
 	if( emptyDir('../files_upload') ) 
 	{
-		$result['status'] = 'error';
-		$result['info'] = 'Brak plików w folderze';
-		echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+		$status = 'error';
+		$info = 'Brak plików w folderze';
 	}
-	else
+	// Zwracamy liczbę plików z katalogu
+	else 
 	{
-		$blad = ''; // Tekst błędu
-		$info = 0; // Liczba zmienionych plików
-		
-		$resize = new Resize;
-
-		if( $resize->getFiles() ) $info = $resize->chengeSize();
-		else $blad = 'Nie można odczytać plików.';
-
-		if( $blad == '' && $info == 0 ) $blad = 'Nie udało się zmienić żadnego pliku.';
-		
-		if( $blad != '' ) 
-		{
-			$result['status'] = 'error';
-			$result['info'] = $blad;
-		}
-		else
-		{
-			$result['status'] = 'success';
-			$result['info'] = 'Zmienione pliki: '.$info;
-		}
-
-		echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+		$status = 'success';
+		$countFiles = count(glob('../files_upload/*'));
+		$info = $countFiles;
 	}
+
+	//Zwracamy wyniki
+	$result['status'] = $status;
+	$result['info'] = $info;
+	echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 }
 
+
+
+// Zmiana rozmiaru plików
+if(isset($_POST['resize']) && $_POST['resize']=='true' && !empty($_POST['resizeNo']))
+{	
+	$resize = new Resize;
+	if( $resize->getFiles() )
+	{
+		$info = $resize->chengeSize($_POST['resizeNo']);
+		$result['status'] = 'success';
+	} 
+	else
+	{
+		$result['status'] = 'errors';
+		$result['info'] = 'Nie udało się zmienić rozmiaru plikó.';
+	} 
+
+	echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+}
 
 
 // Przygotowanie pliku zip

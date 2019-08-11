@@ -3,6 +3,43 @@
  *	 ---------------------  *
  ****************************/
 
+// Blokowanie pól formularza
+function disabledForm(flag)
+{
+	// Zablokowanie formularza
+	if(flag === true)
+	{
+		$('input[type="file"]').attr("disabled", true);
+        $('input[type="submit"]').attr("disabled", true);
+        $('input[type="number"]').attr("readonly", true);
+		$('#form').find('input[type="radio"]:not(:checked)').each(function(){
+			$(this).attr('disabled', true); 
+		});
+	}
+	// Odblokowanie formularza
+	else if(flag === false)
+	{
+		$('input').attr("disabled", false);
+		$('input').attr("readonly", false);
+	}
+}
+
+
+
+// Czyści ekran z informacji
+function cleanBoard()
+{
+	$("#errors").empty();
+	$("#status").empty();
+	$("#info").empty();
+
+	$('#downloadBar').val(0);
+	$('#uploadBar').val(0);
+	$('#resizeBar').val(0);	
+}
+
+
+
 // Ustawia liczbę wybranych plików
 function setCountFiles()
 {
@@ -70,7 +107,28 @@ function setUnit()
 // Zmienia status zadania
 function setStatus(text)
 {
+	$("#errors").empty(); // Czyści ewentualne pozostałe błędy
+	$("#status").empty();
 	$("#status").empty().append(text);	
+}
+
+
+
+// Zwraca informacje
+function setInfo(text)
+{
+	$("#info").append(text);
+	$("#info").append('<br>');
+}
+
+
+
+// Ustawienie błędu
+function setErrors(text)
+{
+	$("#status").empty();
+	$("#errors").empty();
+	$("#errors").append(text);
 }
 
 
@@ -95,6 +153,7 @@ function createLink()
 	a.innerText = "images.zip";
 	//a.classList.add("module");
 	body.appendChild(a);
+	// Dodajemy onclika
 	$('a[download]').click(fileDownload);
 }
 
@@ -107,40 +166,49 @@ function statusListener()
 
 	switch (status)
 	{
-		case 'Sprawdzam dane...':
+		case 'Sprawdzanie parametrów...':
+			break;
+
+		case 'Sprawdzanie zakończone.':
+			filesUpload()
 			break;
 
 		case 'Przesyłanie plików...':
 			break;
 		
 		case 'Zakończono przesyłanie.':
-			setTimeout(resizeFile, 1000);
+			setTimeout(checkFilesDir, 50);
+			break;
+
+		case 'Sprawdzanie plików...':
 			break;
 
 		case 'Zmiana wielkości plików...':
 			break;
 
 		case 'Zmieniono wielkość.':
-		 	setTimeout(createZip, 800);
+		 	setTimeout(createZip, 100);
 		 	break;
 
 		case 'Tworzenie pliku zip...':
 		 	break;
-
 		
 		case 'Zip gotowy.':
 			createLink();
-		 	setTimeout(forceDownload, 500);
+		 	setTimeout(forceDownload, 100);
 		 	break;
 
 		case 'Pobieranie pliku...':
 		 	break;
 
 		case 'Pobieranie zakończone.':
-		 	setTimeout(cleaner, 2000);
+		 	setTimeout(cleaner, 1000);
 		 	break;
 	}
 }
+
+
+
 
 
 
@@ -152,6 +220,8 @@ function statusListener()
 // Wysłanie formularza
 function sendForm()
 {
+	setStatus('Sprawdzanie parametrów...');
+
 	// Dodatkowe pola
 	let totalSize = 0; // Rozmiar wszystkich plików
 	let files = $('#file')[0].files;
@@ -160,9 +230,9 @@ function sendForm()
 	// Przygotowanie danych
 	let data = new FormData();
 	let inputs = $('#form').serializeArray();
-	inputs.push({name:'size', value:totalSize, name:'send', value:'true' });
+	inputs.push({ name:'size', value:totalSize });
+	inputs.push({ name:'send', value:'true' });
 	$.each(inputs, function (key, input){ data.append(input.name, input.value); });
-	data.append('key', 'value'); 
 
 	// Zapytanie ajax
 	$.ajax(
@@ -174,13 +244,18 @@ function sendForm()
 	    dataType:'json',
 	    data: data
 	})
-	.done(function(result)
-    {
-        $("#errors").empty(); // Czyści błędy
-        if(result.status == "success") filesUpload(); // Wysyła pliki
-        else $("#errors").append(result.info); // Wyświetla błędy
+	.done(result => {
+        if(result.status == "success") 
+        {
+        	setStatus('Sprawdzanie zakończone.'); // Wysyła pliki
+        	disabledForm(true);
+        }
+        else setErrors(result.info); // Wyświetla błędy  
     })
-	.fail(error => console.log(error));
+	.fail(error => {
+		console.log(error);
+		setErrors('Wystąpił nieokreślony błąd 0');
+	});
 }
 
 
@@ -210,35 +285,34 @@ function filesUpload()
 	// Rozpoczęcie pobierania
 	function loadStart() {
 		setStatus('Przesyłanie plików...');
+		$('#uploadBar').val(0);
 	}
 
 	// Pasek postępu
-	function progressTransfer(e) {
-		const progress = (e.loaded / e.total)*100;
+	function progressTransfer(e)
+	{
+		let progress = (e.loaded/e.total)*100;
 		$('#uploadBar').val(progress);
 	}
 
 	// Zakończenie przesyłania
 	function loadTransfer() {
-		if (this.status === 200) $("#info").append(this.response);
+		if (this.status === 200) setInfo(this.response);
 		else // Status inny niż 200 = błąd
 		{
-			if(this.status !== 'undefined')
-				$("#errors").empty().append('Połączenie zakończyło się statusem '+this.status);
-			else 
-				$("#errors").empty().append('Wystąpił nieokreślony błąd');
-			error=true;
+			if(this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem '+this.status);
+			else setErrors('Wystąpił nieokreślony błąd 1');
 		} 
 	}
 
 	// Błędy i anulowanie
-	function errorTransfer(){$("#errors").empty().append('Błąd wysyłania');error=true;}
-	function abortTransfer(){$("#errors").empty().append('Anulowanie wysyłania');error=true;}
+	function errorTransfer(){ setErrors('Błąd wysyłania'); }
+	function abortTransfer(){ setErrors('Anulowanie wysyłania'); }
 
 	// Koniec wysyłania
 	function loadEnd() 
 	{ 
-		if(error)
+		if($('#errors').text() != '')
 		{
 			$('#uploadBar').val(0);
 			return false;
@@ -251,27 +325,69 @@ function filesUpload()
 
 
 
-// Włącza zmiane rozmiaru plików
-function resizeFile()
+// Sprawdzamy folder i liczbe plików
+function checkFilesDir()
 {
-	setStatus('Zmiana wielkości plików...');
-	
-	let inputs = $('#form').serializeArray();
-	inputs.push({name:'resize', value:'true'});
+	setStatus('Sprawdzanie plików...');
 
-	$.post( "sys/ajax.php", inputs, function( data ){
-		
-		// Czyścimy błędy
-		$("#errors").empty();
-		
+	$.post( "sys/ajax.php", {checkdir:"true"}, data => {
 		// Zwracamy wyniki
-		if( data.status == "error" ) $("#errors").append(data.info);
-		else if( data.status == "success" )
+		if( data.status == "success" )
 		{
-			$("#info").append(data.info);
-			setStatus('Zmieniono wielkość.');
+			setStatus('Zmiana wielkości plików...');
+			resize(data.info, 1);
 		} 
-	}, "json");
+		else if( data.status == "error" ) setErrors(data.info);	
+	}, "json")
+	.fail(error => {
+		console.log(error);
+		setErrors('Wystąpił nieokreślony błąd 2');
+	});
+}
+
+
+
+// Włącza zmiane rozmiaru plików
+function resize(countFiles, fileNo)
+{
+	// Przygotowanie danych
+	let data = new FormData();
+	let inputs = $('#form').serializeArray();
+	inputs.push({ name:'resize', value:'true' });
+	$.each(inputs, function (key, input){ data.append(input.name, input.value); });
+	data.append('resizeNo', fileNo);
+
+	// Zapytanie ajax
+	$.ajax(
+	{
+	    url: "sys/ajax.php",
+	    method: "POST",
+	    processData: false,
+	    contentType: false,
+	    dataType:'json',
+	    data: data
+	})
+	.done(result => {
+        if(result.status == "success") 
+        {	
+        	// Progres barr
+			let progress = (fileNo/countFiles)*100;
+			$('#resizeBar').val(progress);
+
+        	if(fileNo < countFiles)
+        	{
+				// Rekurencja dla kolejnych plików
+				fileNo++;
+        		resize(countFiles, fileNo);	
+        	}
+        	else setStatus('Zmieniono wielkość.');
+        }
+        else setErrors(result.info); // Wyświetla błędy  
+    })
+	.fail(error => {
+		console.log(error);
+		setErrors('Wystąpił nieokreślony błąd 3');
+	});
 }
 
 
@@ -281,23 +397,19 @@ function createZip()
 {
 	setStatus('Tworzenie pliku zip...');
 
-	$.post( "sys/ajax.php", {zip:"true"}, function( data ){
-		
-		// Czyścimy błędy
-		$("#errors").empty();
-		
+	$.post( "sys/ajax.php", {zip:"true"}, data => {
 		// Zwracamy wyniki
-		if( data.status == "error" )
-		{
-			$("#errors").append(data.info);
-			$("#status").empty();
-		}
+		if( data.status == "error" ) {setErrors(data.info);}
 		else if( data.status == "success" )
 		{
-			$("#info").append(data.info);
+			setInfo(data.info);
 			setStatus('Zip gotowy.');
-		} 
-	}, "json");
+		}
+	}, "json")
+	.fail(error => {
+		console.log(error);
+		setErrors('Wystąpił nieokreślony błąd 4');
+	});
 }
 
 
@@ -306,7 +418,7 @@ function createZip()
 function fileDownload()
 {
 	// Wyłączamy bo użycie metody GET wywoła reload strony
-	$(window).off( "beforeunload"); 
+	$(window).off("beforeunload"); 
 
 	let xhr = new XMLHttpRequest();
 	
@@ -325,7 +437,7 @@ function fileDownload()
 
 	// Pasek postępu
 	function progressTransfer(e) {
-		const progress = (e.loaded / e.total)*100;
+		let progress = (e.loaded / e.total)*100;
 		$('#downloadBar').val(progress);
 	}
 
@@ -339,16 +451,15 @@ function fileDownload()
 		}
 		else // Status inny niż 200 = błąd
 		{
-			if(this.status !== 'undefined')
-				$("#errors").empty().append('Połączenie zakończyło się statusem '+this.status);
-			else 
-				$("#errors").empty().append('Wystąpił nieokreślony błąd');
+			if(this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem '+this.status);
+			else setErrors('Wystąpił nieokreślony błąd 5');
+				
 		} 
 	}
 
 	// Błędy i anulowanie
-	function errorTransfer(){$("#errors").empty().append('Błąd pobierania');}
-	function abortTransfer(){$("#errors").empty().append('Anulowanie pobierania');}
+	function errorTransfer(){ setErrors('Błąd pobierania'); }
+	function abortTransfer(){ setErrors('Anulowanie pobierania'); }
 }
 
 
@@ -358,8 +469,8 @@ function cleaner()
 {
 	$.post( "sys/ajax.php", {clean:"true"} );
 	$('a[download]').remove();
+	disabledForm(false);
 }
-
 
 
 
@@ -384,6 +495,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 	// Wysłanie plików
 	$('#form').submit(function(event){
 		event.preventDefault();
+		cleanBoard();
 		sendForm();
 	});
 
