@@ -1,6 +1,5 @@
 <?php
 
-
 class Zipper extends ZipArchive
 {
 	private $listFiles = []; // Lista plików

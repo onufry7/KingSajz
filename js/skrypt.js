@@ -3,6 +3,13 @@
  *	 ---------------------  *
  ****************************/
 
+// Precyzyjne zaokrąglanie liczb
+Number.prototype.round = function(miejsc)
+{
+	return +(Math.round(this+"e+"+miejsc)+"e-"+miejsc);
+}
+
+
 // Blokowanie pól formularza
 function disabledForm(flag)
 {
@@ -133,6 +140,17 @@ function setErrors(text)
 
 
 
+// Progres barr
+function progresBarr(val, total, id)
+{
+	// Wrtość value tagu progress
+	let progress = (val/total)*100;
+	progress = progress.round(2);
+	$(id).val(progress);
+}
+
+
+
 // Wymusza pobranie pliku
 function forceDownload()
 {
@@ -176,7 +194,7 @@ function statusListener()
 		case 'Przesyłanie plików...':
 			break;
 		
-		case 'Zakończono przesyłanie.':
+		case 'Przesyłanie zakończone.':
 			setTimeout(checkFilesDir, 50);
 			break;
 
@@ -191,9 +209,11 @@ function statusListener()
 		 	break;
 
 		case 'Tworzenie pliku zip...':
+			$('#loader').addClass("loader");
 		 	break;
 		
 		case 'Zip gotowy.':
+			$('#loader').removeClass("loader");
 			createLink();
 		 	setTimeout(forceDownload, 100);
 		 	break;
@@ -291,8 +311,7 @@ function filesUpload()
 	// Pasek postępu
 	function progressTransfer(e)
 	{
-		let progress = (e.loaded/e.total)*100;
-		$('#uploadBar').val(progress);
+		progresBarr(e.loaded, e.total, '#uploadBar');
 	}
 
 	// Zakończenie przesyłania
@@ -319,7 +338,7 @@ function filesUpload()
 		}
 
 		$("#errors").empty();
-		setStatus('Zakończono przesyłanie.');
+		setStatus('Przesyłanie zakończone.');
 	}
 }
 
@@ -371,9 +390,8 @@ function resize(countFiles, fileNo)
         if(result.status == "success") 
         {	
         	// Progres barr
-			let progress = (fileNo/countFiles)*100;
-			$('#resizeBar').val(progress);
-
+        	progresBarr(fileNo, countFiles, '#resizeBar');
+			
         	if(fileNo < countFiles)
         	{
 				// Rekurencja dla kolejnych plików
@@ -436,9 +454,9 @@ function fileDownload()
 	}
 
 	// Pasek postępu
-	function progressTransfer(e) {
-		let progress = (e.loaded / e.total)*100;
-		$('#downloadBar').val(progress);
+	function progressTransfer(e) 
+	{
+		progresBarr(e.loaded, e.total, '#downloadBar');
 	}
 
 	// Zakończenie przesyłania
