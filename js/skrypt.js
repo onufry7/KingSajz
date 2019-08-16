@@ -27,6 +27,7 @@ function disabledForm(flag)
 	else if(flag === false)
 	{
 		$('input').attr("disabled", false);
+		$('div[style="display: none;"] input').attr("disabled", true);
 		$('input').attr("readonly", false);
 	}
 }
@@ -64,18 +65,24 @@ function setScale()
 	{
 		case 'width':
 			$('div#szerokosc').hide();
+			$('#szer').attr("disabled", true);
 			$('div#wysokosc').show();
+			$('#wys').attr("disabled", false);
 			break;
 
 		case 'height':
 			$('div#szerokosc').show();
+			$('#szer').attr("disabled", false);
 			$('div#wysokosc').hide();
+			$('#wys').attr("disabled", true);
 			break;
 
 		case 'none':
 		default:
 			$('div#szerokosc').show();
+			$('#szer').attr("disabled", false);
 			$('div#wysokosc').show();
+			$('#wys').attr("disabled", false);
 	}
 }
 

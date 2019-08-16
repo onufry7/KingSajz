@@ -97,12 +97,22 @@ class Resize
 			{
 				case 'percent':
 					// Szerokość
-					$width = ( is_null($this->width) ) ? $this->height : $this->width;
-					$width = round( ($oldWidth*$width)/100 );
+					if( is_null($this->width) ) $width = round($oldWidth);
+					else $width = round( ($oldWidth*$this->width)/100 );
 					// Wysokość
-					$height = ( is_null($this->height) ) ? $this->width : $this->height;
-					$height = round( ($oldHeight*$height)/100 );
+					if( is_null($this->height) ) $height = round($oldHeight);
+					else $height = round( ($oldHeight*$this->height)/100 );
 					break;
+
+				// Wersja skaloalna
+				// case 'percent':
+				// 	// Szerokość
+				// 	$width = ( is_null($this->width) ) ? $this->height : $this->width;
+				// 	$width = round( ($oldWidth*$width)/100 );
+				// 	// Wysokość
+				// 	$height = ( is_null($this->height) ) ? $this->width : $this->height;
+				// 	$height = round( ($oldHeight*$height)/100 );
+				// 	break;
 
 				case 'mm':
 					// Pobiera dpi obrazu (x i y)
@@ -122,7 +132,7 @@ class Resize
 					if( is_null($this->width) ) $width = round($oldWidth);
 					else $width = round( ($dpix/2.54)*$this->width );
 					// Wysokość
-					if( !is_null($this->height) ) $height = round($oldHeight);
+					if( is_null($this->height) ) $height = round($oldHeight);
 					else $height = round( ($dpiy/2.54)*$this->height );
 					break;
 
