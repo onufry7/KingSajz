@@ -34,10 +34,12 @@ class Validation
 			case 'none': 
 				break;
 			case 'width': 
+			case 's-width': 
 				$width = 'false'; 
 				unset($_POST['width']);
 				break;
 			case 'height': 
+			case 's-height': 
 				$height = 'false'; 
 				unset($_POST['height']);
 				break;

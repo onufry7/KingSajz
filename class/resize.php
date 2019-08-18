@@ -96,54 +96,96 @@ class Resize
 			switch ($this->unit) 
 			{
 				case 'percent':
+					
 					// Szerokość
-					if( is_null($this->width) ) $width = round($oldWidth);
-					else $width = round( ($oldWidth*$this->width)/100 );
+					if( !is_null($this->width) ) $width = round( ($oldWidth*$this->width)/100 );
+					else if( $this->scale == "width" ) $width = round($oldWidth);
+					else if( $this->scale == "s-width" ) $width = round( ($oldWidth*$this->height)/100 );
+					
 					// Wysokość
-					if( is_null($this->height) ) $height = round($oldHeight);
-					else $height = round( ($oldHeight*$this->height)/100 );
+					if( !is_null($this->height) ) $height = round( ($oldHeight*$this->height)/100 );
+					else if( $this->scale == "height" ) $height = round($oldHeight);
+					else if( $this->scale == "s-height" ) $height = round( ($oldHeight*$this->width)/100 );
+					
 					break;
 
-				// Wersja skaloalna
-				// case 'percent':
-				// 	// Szerokość
-				// 	$width = ( is_null($this->width) ) ? $this->height : $this->width;
-				// 	$width = round( ($oldWidth*$width)/100 );
-				// 	// Wysokość
-				// 	$height = ( is_null($this->height) ) ? $this->width : $this->height;
-				// 	$height = round( ($oldHeight*$height)/100 );
-				// 	break;
+				
 
 				case 'mm':
+					
 					// Pobiera dpi obrazu (x i y)
 					list($dpix, $dpiy) = imageresolution($img); 
+					
 					// Szerokość
-					if( is_null($this->width) ) $width = round($oldWidth);
-					else $width = round( ($dpix/2.54)*($this->width/10) );
+					if( !is_null($this->width) ) $width = round( ($dpix/2.54)*($this->width/10) );
+					else if( $this->scale == "width" ) $width = round($oldWidth);
+					else if( $this->scale == "s-width" ) 
+					{
+						$skala = ($this->height*100)/$oldHeight;
+						$width = round( ((($dpix/2.54)*($oldWidth/10) )*$skala)/100 );
+					}
+					
 					// Wysokość
-					if( is_null($this->height) ) $height = round($oldHeight);
-					else $height = round( ($dpiy/2.54)*($this->height/10) );
+					if( !is_null($this->height) ) $height = round( ($dpiy/2.54)*($this->height/10) );
+					else if( $this->scale == "height" ) $height = round($oldHeight);
+					else if( $this->scale == "s-height" )
+					{
+						$skala = ($this->width*100)/$oldWidth;
+						$height = round( ((($dpiy/2.54)*($oldHeight/10))*$skala)/100 );
+					}
+					
 					break;
 
+				
+
 				case 'cm':
+					
 					// Pobiera dpi obrazu (x i y)
 					list($dpix, $dpiy) = imageresolution($img); 
+					
 					// Szerokość
-					if( is_null($this->width) ) $width = round($oldWidth);
-					else $width = round( ($dpix/2.54)*$this->width );
+					if( !is_null($this->width) ) $width = round( ($dpix/2.54)*$this->width );
+					else if( $this->scale == "width" ) $width = round($oldWidth);
+					else if( $this->scale == "s-width" ) 
+					{
+						$skala = ($this->height*100)/$oldHeight;
+						$width = round( ((($dpix/2.54)*$oldWidth)*$skala)/100 );
+					}
+					
 					// Wysokość
-					if( is_null($this->height) ) $height = round($oldHeight);
-					else $height = round( ($dpiy/2.54)*$this->height );
+					if( !is_null($this->height) ) $height = round( ($dpiy/2.54)*$this->height );
+					else if( $this->scale == "height" ) $height = round($oldHeight);
+					else if( $this->scale == "s-height" )
+					{
+						$skala = ($this->width*100)/$oldWidth;
+						$height = round( ((($dpiy/2.54)*$oldHeight)*$skala)/100 );
+					}
+					
 					break;
+
+				
 
 				case 'px':
 				default:
+					
 					// Szerokość
-					$width = ( is_null($this->width) ) ? $oldWidth : $this->width;
-					$width = round($width);
+					if( !is_null($this->width) ) $width = round($this->width);
+					else if( $this->scale == "width" ) $width = round($oldWidth);
+					else if( $this->scale == "s-width" )
+					{
+						$skala = ($this->height*100)/$oldHeight;
+						$width = round( ($oldWidth*$skala)/100 );
+					}
+					
 					// Wysokość
-					$height = ( is_null($this->height) ) ? $oldHeight : $this->height;
-					$height = round($height);
+					if( !is_null($this->height) ) $height = round($this->height);
+					else if( $this->scale == "height" ) $height = round($oldHeight);
+					else if( $this->scale == "s-height" )
+					{
+						$skala = ($this->width*100)/$oldWidth;
+						$height = round( ($oldHeight*$skala)/100 );
+					}
+					
 					break;
 			}
 

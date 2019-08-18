@@ -34,7 +34,7 @@ h1 > span
 {
 	color: 	#D4213D;
 	display: inline-block;
-	transform: translate(5px, 16px) rotate(12deg);
+	transform: translate(5px, 17px) rotate(12deg);
 }
 
 
@@ -78,7 +78,9 @@ progress::after
 
 
 
+/* Animacje */
 
+/* Indykator zipowania */
 @keyframes spin 
 {
   0% { transform: rotate(0deg); }

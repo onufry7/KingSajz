@@ -64,6 +64,7 @@ function setScale()
 	switch(value)
 	{
 		case 'width':
+		case 's-width':
 			$('div#szerokosc').hide();
 			$('#szer').attr("disabled", true);
 			$('div#wysokosc').show();
@@ -71,6 +72,7 @@ function setScale()
 			break;
 
 		case 'height':
+		case 's-height':
 			$('div#szerokosc').show();
 			$('#szer').attr("disabled", false);
 			$('div#wysokosc').hide();
