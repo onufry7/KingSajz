@@ -220,6 +220,7 @@ form.errorsForm input:checked:hover
 	justify-content: space-between;
 	flex-direction: column;
 	background-color: rgba(70,70,70,0.2);
+	position: relative;
 }
 
 
@@ -297,10 +298,11 @@ progress
 }
 progress::after
 { 
-	content: attr(value)"%";
+	content: attr(value)" %";
 	font-size: 18px;
 	position: absolute;
 	bottom: 0;
+	left: 85px;
 } 
 /* chrome, opera, safari */
 progress::-webkit-progress-bar 
@@ -332,14 +334,22 @@ progress::-ms-fill
 /* Kółko przy zipowaniu */
 .loader 
 {
-	border: 5px solid #eee;
-	border-top: 5px solid #06f;
+	border-left: 25px solid #eee;
+	border-right: 25px solid #eee;
+	border-bottom: 25px solid #06f;
+	border-top: 25px solid #06f;
 	border-radius: 50%;
-	width: 20px;
-	height: 20px;
+	width: 45px;
+	height: 45px;
 	animation: spin 2s linear infinite;
 	display: inline-black;
-	margin: 40px auto;
+	margin: auto;
+	position: absolute;
+	z-index: 2;
+	top: 30%;
+	left: 50%;
+	margin-left: -35px;
+	opacity: 0.7;
 }
 
 
