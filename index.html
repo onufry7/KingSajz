@@ -20,69 +20,77 @@
 
 			<form enctype="multipart/form-data" method="POST" id="form">
 				
-				<div class="fild">
-					Jednostka: 
+				<fieldset class="fild unit">
+					<span id="vUnit" class="valid"></span>
+					<legend> Jednostka </legend>
 					<label><input type="radio" name="unit" value="percent"> %</label>
 					<label><input type="radio" name="unit" value="px" checked> px</label>
 					<label><input type="radio" name="unit" value="cm"> cm</label>
 					<label><input type="radio" name="unit" value="mm"> mm</label>
-				</div>
+				</fieldset>
 				
-				<div class="fild">
-					Skala: 
-					<label>
-						<input type="radio" name="scale" value="none" checked> Brak
-					</label>
-					<label>
-						<input type="radio" name="scale" value="width"> Zachowaj szerokość
-					</label>
-					<label>
-						<input type="radio" name="scale" value="height"> Zachowaj wysokość
-					</label>
-					<label>
-						<input type="radio" name="scale" value="s-width"> Skaluj szerokość
-					</label>
-					<label>
-						<input type="radio" name="scale" value="s-height"> Skaluj wysokość
-					</label>
-				</div>
+				<fieldset class="fild scale">
+					<span id="vScale" class="valid"></span>
+					<legend> Skala </legend>
+					<div class="row"><label><input type="radio" name="scale" value="none" checked> Brak </label></div>
+					<br>
+					<div class="row"><label><input type="radio" name="scale" value="width"> Zachowaj szerokość </label></div>
+					<div class="row"><label><input type="radio" name="scale" value="height"> Zachowaj wysokość </label></div>
+					<br>
+					<div class="row"><label><input type="radio" name="scale" value="s-width"> Skaluj szerokość </label></div>
+					<div class="row"><label><input type="radio" name="scale" value="s-height"> Skaluj wysokość </label></div>
+				</fieldset>
 
-				<div class="fild" id="szerokosc">
-					<label for="szer">Szerokość: </label>
-					<input type="number" id="szer" name="width" min="1" value="">
-					<span></span>
-				</div>
-
-				<div class="fild" id="wysokosc">
-					<label for="wys">Wysokość: </label>
-					<input type="number" id="wys" name="height" min="1" value="">
-					<span></span>
-				</div>
+				<fieldset class="fild size">
+					<legend> Wymiary </legend>
+					<span id="vSize" class="valid"></span>
+					<div class="row" id="szerokosc">
+						<label>Szerokość: 
+							<input type="number" id="szer" name="width" min="1" value="">
+							<span></span>
+						</label>
+					</div>
+					<div class="row" id="wysokosc">
+						<label>Wysokość: 
+							<input type="number" id="wys" name="height" min="1" value="">
+							<span></span>
+						</label>
+					</div>
+				</fieldset>
 
 				<div class="fild">
-					<label for="file">Plik/i: </label>
-					<input type="file" id="file" name="file[]" value="" multiple>
+					<span id="vFiles" class="valid"></span>
+					<label>Plik/i:&nbsp
+						<input type="file" id="file" name="file[]" value="" multiple>
+					</label>
 				</div>
 
 				<input type="hidden" name="count" id="count" value="">
 
-				<div class="fild">
-					<input type="submit" name="submit" value="Wyślij">
+				<div class="submitFild">
+					<input type="submit" name="submit" value="Wyślij" class="button">
 				</div>
 				
 			</form>
 			
+			
+			<div id="console">
+				<div id="status">Status</div>
 
-			<div id="status"></div>
-			<div id="loader"></div>
-			<div id="errors"></div>
-			<div id="info"></div>
+				<div id="errors"></div>
+				<div id="info"></div>
 
-			<progress id="uploadBar" value="0" max="100"></progress>
-			<progress id="resizeBar" value="0" max="100"></progress>
-			<progress id="downloadBar" value="0" max="100"></progress>
-		
+				<div id="progresy">
+					<div id="loader"></div>
+					Wysyłanie plików: <progress id="uploadBar" value="0" max="100"></progress>
+					Zmiana rozmiaru: <progress id="resizeBar" value="0" max="100"></progress>
+					Pobieranie zipa: <progress id="downloadBar" value="0" max="100"></progress>
+				</div>
+			</div>
+
 		</main>
+		
+		<footer>STOPKA</footer>
 
 	</body>
 </html>
