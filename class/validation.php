@@ -25,7 +25,7 @@ class Validation
 			case 'mm':
 			case 'percent':
 				break;
-			default: $errors['unit'] = 'Nie wybrano jednostki!'; break;
+			default: $errors['unit'] = 'Wybierz jednostkę !'; break;
 		}
 
 		// Walidacja skali
@@ -43,7 +43,7 @@ class Validation
 				$height = 'false'; 
 				unset($_POST['height']);
 				break;
-			default: $errors['scale'] = 'Nie wybrano skali!'; break;		
+			default: $errors['scale'] = 'Wybierz skale !'; break;		
 		}
 
 		// Walidacja szerokości
@@ -51,23 +51,23 @@ class Validation
 		{
 			// Jeśli NULL
 			if( is_null($width) ) 
-				$errors['width'] = 'Nie podano szerokość!';
+				$errors['width'] = 'Podaj szerokość !';
 
 			// Jeśli procenty
-			if( $unit=='percent' &&  !(0 < $width && $width <= 200) )
-				$errors['width'] = 'Nieprawidłowy zakres szerokości!';
+			else if( $unit=='percent' &&  !(0 < $width && $width <= 200) )
+				$errors['width'] = 'Popraw szerokość ! (max 200)';
 
 			// Jeśli centymetry
-			if( $unit=='cm' &&  !(0 < $width && $width <= 100) )
-				$errors['width'] = 'Nieprawidłowy zakres szerokości!';
+			else if( $unit=='cm' &&  !(0 < $width && $width <= 100) )
+				$errors['width'] = 'Popraw szerokość ! (max 100)';
 
 			// Jeśli milimetry
-			if( $unit=='mm' &&  !(0 < $width && $width <= 1000) )
-				$errors['width'] = 'Nieprawidłowy zakres szerokości!';
+			else if( $unit=='mm' &&  !(0 < $width && $width <= 1000) )
+				$errors['width'] = 'Popraw szerokość ! (max 1000)';
 
 			// Jeśli piksele
-			if( $unit=='px' &&  !(0 < $width && $width <= 3500) )
-				$errors['width'] = 'Nieprawidłowy zakres szerokości!';
+			else if( $unit=='px' &&  !(0 < $width && $width <= 3500) )
+				$errors['width'] = 'Popraw szerokość ! (max 3500)';
 		}
 
 		// Walidacja wysokości
@@ -75,23 +75,23 @@ class Validation
 		{
 			// Jeśli NULL
 			if( is_null($height) ) 
-				$errors['height'] = 'Nie Podano wysokość!';
+				$errors['height'] = 'Podaj wysokość !';
 
 			// Jeśli procenty
-			if( $unit=='percent' &&  !(0 < $height && $height <= 200) )
-				$errors['height'] = 'Nieprawidłowy zakres wysokości!';
+			else if( $unit=='percent' &&  !(0 < $height && $height <= 200) )
+				$errors['height'] = 'Popraw wysokość ! (max 200)';
 
 			// Jeśli centymetry
-			if( $unit=='cm' &&  !(0 < $height && $height <= 100) )
-				$errors['height'] = 'Nieprawidłowy zakres wysokości!';
+			else if( $unit=='cm' &&  !(0 < $height && $height <= 100) )
+				$errors['height'] = 'Popraw wysokość ! (max 100)';
 
 			// Jeśli milimetry
-			if( $unit=='mm' &&  !(0 < $height && $height <= 1000) )
-				$errors['height'] = 'Nieprawidłowy zakres wysokości!';
+			else if( $unit=='mm' &&  !(0 < $height && $height <= 1000) )
+				$errors['height'] = 'Popraw wysokość ! (max 1000)';
 
 			// Jeśli piksele
-			if( $unit=='px' &&  !(0 < $height && $height <= 3500) )
-				$errors['height'] = 'Nieprawidłowy zakres wysokości!';
+			else if( $unit=='px' &&  !(0 < $height && $height <= 3500) )
+				$errors['height'] = 'Popraw wysokość ! (max 3500)';
 		}
 
 		// Walidacja liczby przesłanych plików
@@ -100,16 +100,16 @@ class Validation
 
 		// Jeśli plików za duzo 
 		if( $count >  $maxFiles ) 
-			$errors['count'] = 'Wybrano za dużo plików!';
+			$errors['count'] = 'Wybrano za dużo plików !';
 		
 		// Jeśli plików za mało
-		if( $count == null || $count < '1')
-			$errors['count'] = 'Nie wybrano pliku!';	
+		else if( $count == null || $count < '1')
+			$errors['count'] = 'Wybierz pliki !';
 
 
 		// Jeśli przekroczono post_max_size
-		if( $size != null && $size > (int)ini_get('post_max_size') ) 
-			$errors['size'] = 'Rozmiar plików jest za duży!';
+		else if( $size != null && $size > (int)ini_get('post_max_size') ) 
+			$errors['size'] = 'Rozmiar plików jest za duży ! (max '.(int)ini_get('post_max_size').' MB)';
 
 		// Zwracamy tablice z błędami
 		return $errors;
@@ -119,16 +119,40 @@ class Validation
 
 
 	// Renderowanie błędów dla parametrów
+	// public function renderErrors($errors)
+	// {
+		// $result = '<ul>';
+
+		// foreach($errors as $error)
+		// {
+			// $result .= '<li>'.$error.'</li>';	
+		// } 
+		
+		// $result .= '</ul>';
+
+		// return $result;
+	// }	
+	
+	// Renderowanie błędów dla parametrów
 	public function renderErrors($errors)
 	{
-		$result = '<ul>';
-
-		foreach($errors as $error)
+		$size = "";
+		$scale = "";
+		$unit = "";
+		$files = "";
+		
+		foreach($errors as $type => $error)
 		{
-			$result .= '<li>'.$error.'</li>';	
+			if($type == 'height' || $type == 'width') $size .= '<li>'.$error.'</li>';	
+			else if($type == 'count' || $type == 'size') $files .= '<li>'.$error.'</li>';
+			else if($type == 'unit') $unit .= '<li>'.$error.'</li>';
+			else if($type == 'scale') $scale .= '<li>'.$error.'</li>';		
 		} 
 		
-		$result .= '</ul>';
+		if(!empty($size)) $result['size'] = '<ul>'.$size.'</ul>';
+		if(!empty($scale)) $result['scale'] = '<ul>'.$scale.'</ul>';
+		if(!empty($unit)) $result['unit'] = '<ul>'.$unit.'</ul>';
+		if(!empty($files)) $result['files'] = '<ul>'.$files.'</ul>';
 
 		return $result;
 	}

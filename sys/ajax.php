@@ -94,7 +94,7 @@ if( isset($_POST['zip']) && $_POST['zip']=='true' )
 	else
 	{
 		$result['status'] = 'success';
-		$result['info'] = 'Pliki dodane do archiwum: '.$info.'.';
+		$result['info'] = 'Pliki dodane do archiwum: '.$info;
 	}
 
 	echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);	

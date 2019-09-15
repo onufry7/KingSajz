@@ -65,25 +65,25 @@ function setScale()
 	{
 		case 'width':
 		case 's-width':
-			$('div#szerokosc').hide();
+			$('#szerokosc').hide();
 			$('#szer').attr("disabled", true);
-			$('div#wysokosc').show();
+			$('#wysokosc').show();
 			$('#wys').attr("disabled", false);
 			break;
 
 		case 'height':
 		case 's-height':
-			$('div#szerokosc').show();
+			$('#szerokosc').show();
 			$('#szer').attr("disabled", false);
-			$('div#wysokosc').hide();
+			$('#wysokosc').hide();
 			$('#wys').attr("disabled", true);
 			break;
 
 		case 'none':
 		default:
-			$('div#szerokosc').show();
+			$('#szerokosc').show();
 			$('#szer').attr("disabled", false);
-			$('div#wysokosc').show();
+			$('#wysokosc').show();
 			$('#wys').attr("disabled", false);
 	}
 }
@@ -123,9 +123,10 @@ function setUnit()
 // Zmienia status zadania
 function setStatus(text)
 {
+	$(".valid").empty(); // Czyści ewentualne błędy walidacji
 	$("#errors").empty(); // Czyści ewentualne pozostałe błędy
 	$("#status").empty();
-	$("#status").empty().append(text);	
+	$("#status").empty().append(text);
 }
 
 
@@ -134,7 +135,6 @@ function setStatus(text)
 function setInfo(text)
 {
 	$("#info").append(text);
-	$("#info").append('<br>');
 }
 
 
@@ -142,9 +142,28 @@ function setInfo(text)
 // Ustawienie błędu
 function setErrors(text)
 {
-	$("#status").empty();
+	//$('#loader').removeClass("errorsActiv");
+	$("#info").empty();
+	$('#form').addClass("errorsForm");
+	
+	$('#status').addClass("errorsActiv");
+	$("#status").empty().append('! ERROR !');
+	
+	$('#errors').addClass("errorsActiv");
 	$("#errors").empty();
-	$("#errors").append(text);
+	$("#errors").append(text+'<br>(Odśwież stronę)');
+}
+
+
+
+// Błędy walidacji
+function setValid(errors)
+{
+	$(".valid").empty();
+	if(errors.scale != undefined) $("#vScale").append(errors.scale);
+	if(errors.files != undefined) $("#vFiles").append(errors.files);
+	if(errors.unit != undefined) $("#vUnit").append(errors.unit);
+	if(errors.size != undefined) $("#vSize").append(errors.size);
 }
 
 
@@ -279,7 +298,7 @@ function sendForm()
         	setStatus('Sprawdzanie zakończone.'); // Wysyła pliki
         	disabledForm(true);
         }
-        else setErrors(result.info); // Wyświetla błędy  
+        else setValid(result.info); // Wyświetla błędy  
     })
 	.fail(error => {
 		console.log(error);
@@ -376,6 +395,9 @@ function checkFilesDir()
 
 
 // Włącza zmiane rozmiaru plików
+//let resizeErr = 0;
+//let resizeOk = 0;
+
 function resize(countFiles, fileNo)
 {
 	// Przygotowanie danych
@@ -429,7 +451,7 @@ function createZip()
 		if( data.status == "error" ) {setErrors(data.info);}
 		else if( data.status == "success" )
 		{
-			setInfo(data.info);
+			setInfo('<p>'+data.info+'</p>');
 			setStatus('Zip gotowy.');
 		}
 	}, "json")

@@ -1,19 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Lato|Noto+Serif:700&display=swap&subset=latin-ext');
 
 
- /* Główne elementy */
-:root
-{
-	font-family: 'Lato', sans-serif;
-	font-size: 20px;
-}
-
 body
 {
 	margin: 0;
 	padding: 0;
-	background-color: #222;
+	font-family: 'Lato', sans-serif;
+	font-size: 20px;
 	color: #ccc;
+	background-color: #222;
 	text-shadow: 1px 1px 1px #000;
 }
 
@@ -31,7 +26,7 @@ footer
 {
 	text-align: center;
 	width: 500px;
-	margin: 35px auto;
+	margin: 50px auto 35px;
 }
 
 /* Nagłówek strony */
@@ -84,10 +79,11 @@ fieldset label
 .row
 {
 	display: inline-block;
-	width: 240px;
+	width: 250px;
 	margin: 0;
 }
 
+/* Inputy */
 input[type="number"]
 {
 	width: 60px;
@@ -102,21 +98,21 @@ input[type="number"]
 input[type="number"]:focus
 {
 	outline: none;
-	border: 2px solid #5099ff;
+	border: 2px solid #0ff;
 }
 
 input[type="file"]
 {
-	border-radius: 5px;
 	font-size: 20px;
 	background-color: #06f;
-	border-weight: 0;
+	border: none;
+	border-radius: 5px;
 	color: #ccc;
 	cursor: pointer;
 }
 input[type="file"]:focus
 {
-	outline: 1px solid #5099ff;
+	outline: 1px solid #0ff;
 }
 
 input[type="radio"]
@@ -140,12 +136,14 @@ input[type="radio"]:checked:hover
 input[type="radio"]:focus
 {
 	outline: none;
+	border-color: #0ff;
 }
 input[type="radio"]:hover
 {
 	background-color: #aaa;
 }
 
+/* Przyciski */
 .button 
 {
 	display: inline-block;
@@ -177,11 +175,24 @@ input[type="radio"]:hover
 	border: 1px solid #000;
 }
 
+/* Formularz przy błędie aplikacji */
+form.errorsForm label
+{
+	cursor: default;
+}
+form.errorsForm input,
+form.errorsForm input:focus,
+form.errorsForm input:hover,
+form.errorsForm input:checked,
+form.errorsForm input:checked:hover
+{
+	cursor: default;
+	background-color: #ddd;
+	border-color: #ddd;
+	text-decoration: none;
+}
 
-
-
-
-
+/* Błędy walidacji */
 .valid
 {
 	font-size: 18px;
@@ -197,9 +208,6 @@ input[type="radio"]:hover
 
 
 
-
-
-
 /* Okno konsoli */
 #console
 {
@@ -208,8 +216,15 @@ input[type="radio"]:hover
 	border: 2px solid #00f;
 	border-radius: 10px;
 	padding: 8px 10px;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
+	background-color: rgba(70,70,70,0.2);
 }
 
+
+
+/* Pole statusu */
 #status
 {
 	text-align: center;
@@ -219,11 +234,102 @@ input[type="radio"]:hover
 
 
 
+/* Pole informacji */
+#info
+{
+	width: 300px;
+	margin: 0 auto;
+}
+#info ul
+{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+#info > p
+{
+	margin: 5px 0;
+	padding: 0;
+}
 
 
 
+/* Błędy alikacji - konsola*/
+#errors
+{
+	display: none;
+}
+#errors.errorsActiv
+{
+	display: block;
+	width: 300px;
+	margin: auto;
+	padding: 10px 15px;
+	border: 1px solid #f00;
+	border-radius: 10px;
+	text-align: center;
+}
+.errorsActiv
+{
+	color: #f00;
+}
 
 
+
+/* Pole progres barów */
+#progresy
+{
+	padding: 10px;
+	border-top: 1px solid #06f;
+	text-align: center;
+}
+
+/* Wygląd progres barów */
+progress 
+{
+	background-color: #eee;
+	padding: 0px;
+	height: 22px;
+	width: 200px;
+	border: none;
+	border-radius: 5px;
+	position: relative;
+}
+progress::after
+{ 
+	content: attr(value)"%";
+	font-size: 18px;
+	position: absolute;
+	bottom: 0;
+} 
+/* chrome, opera, safari */
+progress::-webkit-progress-bar 
+{
+	background-color: #eee;
+	border-radius: 5px;
+	position: relative;
+}
+progress::-webkit-progress-value 
+{
+	background-color: #06f;
+	border-radius: 5px;
+	position: relative;
+}
+/* Firefox i Edge */
+progress::-moz-progress-bar 
+{
+	background-color: #06f;
+	border-radius: 5px;
+	position: relative;
+}
+/* Edge */
+progress::-ms-fill 
+{
+	color: #06f;
+}
+
+
+/* Kółko przy zipowaniu */
 .loader 
 {
 	border: 5px solid #eee;
@@ -235,14 +341,6 @@ input[type="radio"]:hover
 	display: inline-black;
 	margin: 40px auto;
 }
-
-progress::after 
-{ 
-	content: attr(value)"%";
-	position: relative;
-	left: 50%;
-	top: 0%;
-} 
 
 
 
