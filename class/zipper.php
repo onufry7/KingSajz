@@ -27,7 +27,7 @@ class Zipper extends ZipArchive
 	// Tworzenie pliku zip
 	public function createZip()
 	{
-		if($this->open("$this->srcOut/your-images.zip", ZipArchive::CREATE) === TRUE)
+		if($this->open("$this->srcOut/images.zip", ZipArchive::CREATE) === TRUE)
 		{
 			foreach($this->listFiles as $file)
 			{

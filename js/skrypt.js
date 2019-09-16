@@ -151,7 +151,7 @@ function setErrors(text)
 	
 	$('#errors').addClass("errorsActiv");
 	$("#errors").empty();
-	$("#errors").append(text+'<br>(Odśwież stronę)');
+	$("#errors").append(text);
 }
 
 
@@ -191,14 +191,14 @@ function forceDownload()
 // Tworzy link do pobrania
 function createLink()
 {
-	const body = document.querySelector("body");
+	const el = document.querySelector("#link");
 	const a = document.createElement("a");
-	a.setAttribute("href", "miniatures/your-images.zip");
+	a.setAttribute("href", "miniatures/images.zip");
 	a.setAttribute("download", "images.zip");
 	a.setAttribute("type", "application/zip");
-	a.innerText = "images.zip";
-	//a.classList.add("module");
-	body.appendChild(a);
+	a.innerText = "Pobierz pliki";
+	el.classList.add("brokenLink");
+	el.appendChild(a);
 	// Dodajemy onclika
 	$('a[download]').click(fileDownload);
 }
@@ -395,8 +395,8 @@ function checkFilesDir()
 
 
 // Włącza zmiane rozmiaru plików
-//let resizeErr = 0;
-//let resizeOk = 0;
+let resizeErr = 0;
+let resizeOk = 0;
 
 function resize(countFiles, fileNo)
 {
@@ -418,20 +418,33 @@ function resize(countFiles, fileNo)
 	    data: data
 	})
 	.done(result => {
-        if(result.status == "success") 
+        
+		progresBarr(fileNo, countFiles, '#resizeBar'); // Progres barr
+		
+		if(result.status == "success") 
         {	
-        	// Progres barr
-        	progresBarr(fileNo, countFiles, '#resizeBar');
-			
-        	if(fileNo < countFiles)
-        	{
-				// Rekurencja dla kolejnych plików
-				fileNo++;
-        		resize(countFiles, fileNo);	
-        	}
-        	else setStatus('Zmieniono wielkość.');
+			resizeOk++;
         }
-        else setErrors(result.info); // Wyświetla błędy  
+        else
+		{
+			resizeErr++;
+			console.log(result.info); // Wyświetla błędy  
+		}
+		
+		if(fileNo < countFiles)
+		{
+			// Rekurencja dla kolejnych plików
+			fileNo++;
+			resize(countFiles, fileNo);
+		}
+		else
+		{
+			setInfo('<p>Pliki zmienione: '+resizeOk+'</p>');
+			resizeOk = 0;
+			setInfo('<p>Pliki niezmienione: '+resizeErr+'</p>');
+			resizeErr = 0;
+			setStatus('Zmieniono wielkość.');
+		}
     })
 	.fail(error => {
 		console.log(error);
@@ -471,7 +484,7 @@ function fileDownload()
 
 	let xhr = new XMLHttpRequest();
 	
-	xhr.open("GET", "miniatures/your-images.zip", true);
+	xhr.open("GET", "miniatures/images.zip", true);
 	xhr.addEventListener("loadstart", loadStart, false);
 	xhr.addEventListener("progress", progressTransfer, false);
 	xhr.addEventListener("load", loadTransfer, false);
@@ -502,7 +515,6 @@ function fileDownload()
 		{
 			if(this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem '+this.status);
 			else setErrors('Wystąpił nieokreślony błąd 5');
-				
 		} 
 	}
 
@@ -518,6 +530,10 @@ function cleaner()
 {
 	$.post( "sys/ajax.php", {clean:"true"} );
 	$('a[download]').remove();
+	$('#link').removeClass("brokenLink");
+	$('#errors').removeClass("errorsActiv");
+	$('#status').removeClass("errorsActiv");
+	$('#form').removeClass("errorsForm");
 	disabledForm(false);
 }
 
