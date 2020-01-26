@@ -233,7 +233,7 @@ form.errorsForm input:checked:hover
 /* Okno konsoli */
 #console
 {
-	max-width: 400px;
+	width: 400px;
 	box-sizing: border-box;
 	border: 2px solid #00f;
 	border-radius: 10px;
