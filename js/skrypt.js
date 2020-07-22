@@ -302,6 +302,7 @@ function sendForm()
     })
 	.fail(error => {
 		console.log(error);
+		console.log(error.responseText);
 		setErrors('Wystąpił nieokreślony błąd 0');
 	});
 }
