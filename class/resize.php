@@ -193,6 +193,12 @@ class Resize
 			// Ttworzymy "pusty" obraz
 			$newImg = imagecreatetruecolor($width, $height);
 
+			// Przezroczyste tło w PNG
+			$transparent = imagecolorallocatealpha($newImg, 0, 0, 0, 127);
+			imagefill($newImg, 0, 0, $transparent);
+			imagesavealpha($newImg, true);
+		
+		
 			// Kopiujemy orginalny obraz do "pustego" obrazu
 			imagecopyresampled($newImg, $img, 0, 0, 0, 0, $width, $height, $oldWidth, $oldHeight);
 
