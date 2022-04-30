@@ -1,5 +1,5 @@
 /****************************
- *	 Podstawowe funkcje JS  * 
+ *	 Podstawowe funkcje JS  *
  *	 ---------------------  *
  ****************************/
 
@@ -20,7 +20,7 @@ function disabledForm(flag)
         $('input[type="submit"]').attr("disabled", true);
         $('input[type="number"]').attr("readonly", true);
 		$('#form').find('input[type="radio"]:not(:checked)').each(function(){
-			$(this).attr('disabled', true); 
+			$(this).attr('disabled', true);
 		});
 	}
 	// Odblokowanie formularza
@@ -43,7 +43,7 @@ function cleanBoard()
 
 	$('#downloadBar').val(0);
 	$('#uploadBar').val(0);
-	$('#resizeBar').val(0);	
+	$('#resizeBar').val(0);
 }
 
 
@@ -53,7 +53,7 @@ function setCountFiles()
 {
 	let countFiles = $('#file').prop('files')['length'];
 	$('input#count').val(countFiles);
-}	
+}
 
 
 
@@ -145,10 +145,10 @@ function setErrors(text)
 	//$('#loader').removeClass("errorsActiv");
 	$("#info").empty();
 	$('#form').addClass("errorsForm");
-	
+
 	$('#status').addClass("errorsActiv");
 	$("#status").empty().append('! ERROR !');
-	
+
 	$('#errors').addClass("errorsActiv");
 	$("#errors").empty();
 	$("#errors").append(text);
@@ -183,7 +183,7 @@ function progresBarr(val, total, id)
 function forceDownload()
 {
 	fileDownload();
-	window.location = $('a[download]').attr('href');	
+	window.location = $('a[download]').attr('href');
 }
 
 
@@ -221,7 +221,7 @@ function statusListener()
 
 		case 'Przesyłanie plików...':
 			break;
-		
+
 		case 'Przesyłanie zakończone.':
 			setTimeout(checkFilesDir, 50);
 			break;
@@ -239,7 +239,7 @@ function statusListener()
 		case 'Tworzenie pliku zip...':
 			$('#loader').addClass("loader");
 		 	break;
-		
+
 		case 'Zip gotowy.':
 			$('#loader').removeClass("loader");
 			createLink();
@@ -261,7 +261,7 @@ function statusListener()
 
 
 /********************************************
- * Obsługa formularza, paski postępu, ajaxy *     
+ * Obsługa formularza, paski postępu, ajaxy *
  * ---------------------------------------- *
  ********************************************/
 
@@ -293,12 +293,12 @@ function sendForm()
 	    data: data
 	})
 	.done(result => {
-        if(result.status == "success") 
+        if(result.status == "success")
         {
         	setStatus('Sprawdzanie zakończone.'); // Wysyła pliki
         	disabledForm(true);
         }
-        else setValid(result.info); // Wyświetla błędy  
+        else setValid(result.info); // Wyświetla błędy
     })
 	.fail(error => {
 		console.log(error);
@@ -315,12 +315,12 @@ function filesUpload()
 	let ajax = new XMLHttpRequest();
 	let data = new FormData();
 	let error = false;
-	
+
 	// Przetwarza pliki z formularza
 	let files = $('#file')[0].files;
 	for (let i=0; i<files.length; i++) data.append("files[]", files[i]);
 	data.append('key', 'value');
-	
+
 	// Ajax xhr
 	ajax.open("POST", "sys/upload-files.php");
 	ajax.addEventListener("loadstart", loadStart, false);
@@ -350,7 +350,7 @@ function filesUpload()
 		{
 			if(this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem '+this.status);
 			else setErrors('Wystąpił nieokreślony błąd 1');
-		} 
+		}
 	}
 
 	// Błędy i anulowanie
@@ -358,8 +358,8 @@ function filesUpload()
 	function abortTransfer(){ setErrors('Anulowanie wysyłania'); }
 
 	// Koniec wysyłania
-	function loadEnd() 
-	{ 
+	function loadEnd()
+	{
 		if($('#errors').text() != '')
 		{
 			$('#uploadBar').val(0);
@@ -384,8 +384,8 @@ function checkFilesDir()
 		{
 			setStatus('Zmiana wielkości plików...');
 			resize(data.info, 1);
-		} 
-		else if( data.status == "error" ) setErrors(data.info);	
+		}
+		else if( data.status == "error" ) setErrors(data.info);
 	}, "json")
 	.fail(error => {
 		console.log(error);
@@ -419,19 +419,19 @@ function resize(countFiles, fileNo)
 	    data: data
 	})
 	.done(result => {
-        
+
 		progresBarr(fileNo, countFiles, '#resizeBar'); // Progres barr
-		
-		if(result.status == "success") 
-        {	
+
+		if(result.status == "success")
+        {
 			resizeOk++;
         }
         else
 		{
 			resizeErr++;
-			console.log(result.info); // Wyświetla błędy  
+			console.log(result.info); // Wyświetla błędy
 		}
-		
+
 		if(fileNo < countFiles)
 		{
 			// Rekurencja dla kolejnych plików
@@ -449,6 +449,7 @@ function resize(countFiles, fileNo)
     })
 	.fail(error => {
 		console.log(error);
+		console.log(error.responseText);
 		setErrors('Wystąpił nieokreślony błąd 3');
 	});
 }
@@ -481,10 +482,10 @@ function createZip()
 function fileDownload()
 {
 	// Wyłączamy bo użycie metody GET wywoła reload strony
-	$(window).off("beforeunload"); 
+	$(window).off("beforeunload");
 
 	let xhr = new XMLHttpRequest();
-	
+
 	xhr.open("GET", "miniatures/images.zip", true);
 	xhr.addEventListener("loadstart", loadStart, false);
 	xhr.addEventListener("progress", progressTransfer, false);
@@ -499,7 +500,7 @@ function fileDownload()
 	}
 
 	// Pasek postępu
-	function progressTransfer(e) 
+	function progressTransfer(e)
 	{
 		progresBarr(e.loaded, e.total, '#downloadBar');
 	}
@@ -516,7 +517,7 @@ function fileDownload()
 		{
 			if(this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem '+this.status);
 			else setErrors('Wystąpił nieokreślony błąd 5');
-		} 
+		}
 	}
 
 	// Błędy i anulowanie
@@ -544,14 +545,14 @@ function cleaner()
 
 
 /*************************************
- *	Wywołania po załadowaniu strony  * 
+ *	Wywołania po załadowaniu strony  *
  *	-------------------------------  *
  *************************************/
 document.addEventListener('DOMContentLoaded', function(event) {
-	
+
 	// Selectboxy ustawienia jednostki
 	$('input[name="unit"]').click(setUnit); setUnit();
-	
+
 	// Selectboxy ustawienia skali
 	$('input[name="scale"]').click(setScale); setScale();
 
