@@ -5,7 +5,7 @@ require_once('autoloader.php'); // class autoloader
 
 // Wysłanie formularza
 if( isset($_POST['send']) && $_POST['send']=="true" )
-{    
+{
 	$valid = new Validation; // Klasa sprawdzająca błędy
 	$errors = $valid->validateParams(); // Sprawdzenie parametrów
 	if(!empty($errors))
@@ -17,7 +17,7 @@ if( isset($_POST['send']) && $_POST['send']=="true" )
 		echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 	}
 	else
-	{	
+	{
 		// Prewencyjne czyszczenie katalogów
 		clearDir('../files_upload');
 		clearDir('../miniatures');
@@ -34,13 +34,13 @@ if( isset($_POST['send']) && $_POST['send']=="true" )
 if( isset($_POST['checkdir']) && $_POST['checkdir']=='true' )
 {
 	// Sprawdza czy katalog jest pusty
-	if( emptyDir('../files_upload') ) 
+	if( emptyDir('../files_upload') )
 	{
 		$status = 'error';
 		$info = 'Brak plików w folderze.';
 	}
 	// Zwracamy liczbę plików z katalogu
-	else 
+	else
 	{
 		$status = 'success';
 		$countFiles = count(glob('../files_upload/*'));
@@ -57,18 +57,18 @@ if( isset($_POST['checkdir']) && $_POST['checkdir']=='true' )
 
 // Zmiana rozmiaru plików
 if(isset($_POST['resize']) && $_POST['resize']=='true' && !empty($_POST['resizeNo']))
-{	
+{
 	$resize = new Resize;
 	if( $resize->getFiles() )
 	{
-		$info = $resize->chengeSize($_POST['resizeNo']);
+		$info = $resize->changeSize($_POST['resizeNo']);
 		$result['status'] = 'success';
-	} 
+	}
 	else
 	{
 		$result['status'] = 'errors';
 		$result['info'] = 'Nie udało się zmienić rozmiaru plikó.';
-	} 
+	}
 
 	echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 }
@@ -76,7 +76,7 @@ if(isset($_POST['resize']) && $_POST['resize']=='true' && !empty($_POST['resizeN
 
 // Przygotowanie pliku zip
 if( isset($_POST['zip']) && $_POST['zip']=='true' )
-{    
+{
 	$blad = '';
 
 	$zipper = new Zipper;
@@ -85,7 +85,7 @@ if( isset($_POST['zip']) && $_POST['zip']=='true' )
 	else $blad = 'Nie udało się stworzyć listy plików.';
 
 	if( $blad == '' && $info === false) $blad = 'Nie udało się stworzyć pliku zip.';
-	
+
 	if( $blad != '')
 	{
 		$result['status'] = 'error';
@@ -97,7 +97,7 @@ if( isset($_POST['zip']) && $_POST['zip']=='true' )
 		$result['info'] = 'Pliki dodane do archiwum: '.$info;
 	}
 
-	echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);	
+	echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 }
 
 
