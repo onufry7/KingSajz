@@ -1,8 +1,9 @@
 # KingSajz
 Aplikacja do zmiany rozmiaru plików graficznych.
 Obsługiwane formaty plików: PNG, JPG, GIF.
-Wymaga do działania biblioteki gd
- - w php.ini odblokować: z ;extension=gd na extension=gd
+Wymaga do działania biblioteki gd i zip
+ - w php.ini odblokować: z ;extension=gd na extension=gd 
+ - w php.ini odblokować: z ;extension=zip na extension=zip
 Wersji PHP >= 8.0
 
 
