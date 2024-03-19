@@ -1,4 +1,5 @@
 # KingSajz
+
 Aplikacja do zmiany rozmiaru plików graficznych.
 Obsługiwane formaty plików: PNG, JPG, GIF.
 Wymaga do działania biblioteki gd i zip
@@ -8,6 +9,7 @@ Wersji PHP >= 8.0
 
 
 ## Obsługa
+
 Możemy ustawić jednostkę wielkości dla plików wynikowych.
 Możemy ustawić typ skali tj. w jaki sposób zmienić rozmiar plików.
 Wymiary tu należy określić docelowy wymiar dla plików wynikowych
@@ -20,12 +22,14 @@ pobrania wygenerowanego archiwum zip.
 
 
 ### Pliki/ini
+
 Pole służące do przekazania plików które chcemy zmodyfikować.
 możemy przekazać jeden bądź wiele plików niezależnie od tego
 co wybierzemy program zwróci archiwum zip zawierające plik/i.
 
 
 ### Wymiary
+
 Tutaj określamy jaki wymiary chcemy uzyskać - na plikach wynikowych.
 
 Jeśli pliki źródłowe mają większy rozmiar niż tutaj ustalony to
@@ -36,6 +40,7 @@ nastąpi powiększenie rozmiaru plików.
 
 
 ### Jednostka
+
 Tutaj określamy w jakiej jednostce wielkości podajemy wymiary.
 
 Dostępne wielkości to:
@@ -52,6 +57,7 @@ jednostki wielkości. Czyli możemy przekazać pliki które mają 20px na 20px i
 
 
 ### Skala
+
 Tutaj określamy w jaki sposób chcemy przeskalować przekazane pliki.
 Możemy wybrać z poniższych opcji:
 
