@@ -4,20 +4,16 @@ require_once('helpers.php'); // Pomocnicze funkcje
 require_once('autoloader.php'); // class autoloader
 
 // Wysłanie formularza
-if( isset($_POST['send']) && $_POST['send']=="true" )
-{
+if( isset($_POST['send']) && $_POST['send']=="true" ) {
 	$valid = new Validation; // Klasa sprawdzająca błędy
 	$errors = $valid->validateParams(); // Sprawdzenie parametrów
-	if(!empty($errors))
-	{
+	if(!empty($errors)) {
 		// Przygotowanie danych do zwrotu
 		$result['status'] = 'error';
 		$result['info'] = $valid->renderErrors($errors);
 
 		echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-	}
-	else
-	{
+	} else {
 		// Prewencyjne czyszczenie katalogów
 		clearDir('../files_upload');
 		clearDir('../miniatures');
@@ -34,14 +30,10 @@ if( isset($_POST['send']) && $_POST['send']=="true" )
 if( isset($_POST['checkdir']) && $_POST['checkdir']=='true' )
 {
 	// Sprawdza czy katalog jest pusty
-	if( emptyDir('../files_upload') )
-	{
+	if( emptyDir('../files_upload') ) {
 		$status = 'error';
 		$info = 'Brak plików w folderze.';
-	}
-	// Zwracamy liczbę plików z katalogu
-	else
-	{
+	} else {// Zwracamy liczbę plików z katalogu
 		$status = 'success';
 		$countFiles = count(glob('../files_upload/*'));
 		$info = $countFiles;
@@ -56,16 +48,13 @@ if( isset($_POST['checkdir']) && $_POST['checkdir']=='true' )
 
 
 // Zmiana rozmiaru plików
-if(isset($_POST['resize']) && $_POST['resize']=='true' && !empty($_POST['resizeNo']))
-{
+if(isset($_POST['resize']) && $_POST['resize']=='true' && !empty($_POST['resizeNo'])) {
 	$resize = new Resize;
-	if( $resize->getFiles() )
-	{
+
+	if( $resize->getFiles() ) {
 		$info = $resize->changeSize($_POST['resizeNo']);
 		$result['status'] = 'success';
-	}
-	else
-	{
+	} else {
 		$result['status'] = 'errors';
 		$result['info'] = 'Nie udało się zmienić rozmiaru plikó.';
 	}
@@ -75,24 +64,25 @@ if(isset($_POST['resize']) && $_POST['resize']=='true' && !empty($_POST['resizeN
 
 
 // Przygotowanie pliku zip
-if( isset($_POST['zip']) && $_POST['zip']=='true' )
-{
+if( isset($_POST['zip']) && $_POST['zip']=='true' ) {
 	$blad = '';
 
 	$zipper = new Zipper;
 
-	if( $zipper->createListFiles() ) $info = $zipper->createZip();
-	else $blad = 'Nie udało się stworzyć listy plików.';
+	if ( $zipper->createListFiles() ) {
+		$info = $zipper->createZip();
+	} else {
+		$blad = 'Nie udało się stworzyć listy plików.';
+	}
 
-	if( $blad == '' && $info === false) $blad = 'Nie udało się stworzyć pliku zip.';
+	if ( $blad == '' && $info === false) {
+		$blad = 'Nie udało się stworzyć pliku zip.';
+	}
 
-	if( $blad != '')
-	{
+	if( $blad != '') {
 		$result['status'] = 'error';
 		$result['info'] = $blad;
-	}
-	else
-	{
+	} else {
 		$result['status'] = 'success';
 		$result['info'] = 'Pliki dodane do archiwum: '.$info;
 	}
@@ -103,11 +93,7 @@ if( isset($_POST['zip']) && $_POST['zip']=='true' )
 
 
 // Czyszczenie katalogów
-if( isset($_POST['clean']) && $_POST['clean']=="true" )
-{
+if( isset($_POST['clean']) && $_POST['clean']=="true" ) {
 	clearDir('../files_upload');
 	clearDir('../miniatures');
 }
-
-
-?>

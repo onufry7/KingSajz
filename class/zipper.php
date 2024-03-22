@@ -10,12 +10,13 @@ class Zipper extends ZipArchive
 	// Tworzy listę plików
 	public function createListFiles()
 	{
-		if( is_dir($this->srcIn) )
-		{	// Skanujemy folder w poszukiwaniu plików
-			foreach (glob("$this->srcIn/*") as $file)
-			{	
-				// i zapisujemy pliki do tablicy
-				if( is_file($file) ) $this->listFiles[] = basename($file);
+		// Skanujemy folder w poszukiwaniu plików
+		// i zapisujemy pliki do tablicy
+		if( is_dir($this->srcIn) ) {
+			foreach (glob($this->srcIn.'/*') as $file) {
+				if ( is_file($file) ) {
+					$this->listFiles[] = basename($file);
+				}
 			}
 			return true;
 		}
@@ -27,20 +28,17 @@ class Zipper extends ZipArchive
 	// Tworzenie pliku zip
 	public function createZip()
 	{
-		if($this->open("$this->srcOut/images.zip", ZipArchive::CREATE) === TRUE)
-		{
-			foreach($this->listFiles as $file)
-			{
+		if ($this->open("$this->srcOut/images.zip", ZipArchive::CREATE) === TRUE) {
+			foreach($this->listFiles as $file) {
 				$this->addFile("$this->srcIn/$file", $file);
 			}
 			$numFiles = $this->numFiles;
 			$this->close();
 		    return $numFiles;
+		} else {
+			return false;
 		}
-		else return false;
 	}
 
 }
 
-
-?>

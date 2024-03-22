@@ -273,7 +273,7 @@ function sendForm()
 	// Dodatkowe pola
 	let totalSize = 0; // Rozmiar wszystkich plików
 	let files = $('#file')[0].files;
-	for (let i=0; i<files.length; i++) totalSize += files[i].size;
+	for (const element of files) totalSize += element.size;
 
 	// Przygotowanie danych
 	let data = new FormData();
@@ -318,7 +318,7 @@ function filesUpload()
 
 	// Przetwarza pliki z formularza
 	let files = $('#file')[0].files;
-	for (let i=0; i<files.length; i++) data.append("files[]", files[i]);
+	for (const element of files) data.append("files[]", element);
 	data.append('key', 'value');
 
 	// Ajax xhr

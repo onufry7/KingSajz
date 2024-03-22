@@ -16,18 +16,21 @@ class Resize
 	public function __construct()
 	{
 		// Inicjuje zmienne
-
-		if( isset($_POST['scale']) && !empty($_POST['scale']) )
+		if( isset($_POST['scale']) && !empty($_POST['scale']) ) {
 			$this->scale = $_POST['scale'];
+		}
 
-		if( isset($_POST['height']) && !empty($_POST['height']) )
+		if( isset($_POST['height']) && !empty($_POST['height']) ) {
 			$this->height = $_POST['height'];
+		}
 
-		if( isset($_POST['width']) && !empty($_POST['width']) )
+		if( isset($_POST['width']) && !empty($_POST['width']) ) {
 			$this->width = $_POST['width'];
+		}
 
-		if( isset($_POST['unit']) && !empty($_POST['unit']) )
+		if( isset($_POST['unit']) && !empty($_POST['unit']) ) {
 			$this->unit = $_POST['unit'];
+		}
 	}
 
 
@@ -35,16 +38,18 @@ class Resize
 	// Tworzy listę plików z informacjami o nich
 	public function getFiles()
 	{
-		if( is_dir($this->srcIn) )
-		{	// Skanujemy folder w poszukiwaniu plików
-			foreach (glob("$this->srcIn/*") as $file)
-			{
+		if ( is_dir($this->srcIn) ) {
+			// Skanujemy folder w poszukiwaniu plików
+			foreach (glob("$this->srcIn/*") as $file) {
 				// i zapisujemy pliki do tablicy
-				if( is_file($file) ) $this->files[] = $file;
+				if ( is_file($file) ) {
+					$this->files[] = $file;
+				}
 			}
 			return true;
+		} else {
+			return false; // Jeśli inne niż folder
 		}
-		else return false; // Jeśli inne niż folder
 	}
 
 
@@ -55,8 +60,7 @@ class Resize
 		$no = $no-1;
 		$file = $this->files[$no];
 
-		if( is_file($file) )
-		{
+		if ( is_file($file) ) {
 			// Pobieramy info o pliku
 			$info = pathinfo($file);
 			$filename = $info['filename'];
@@ -66,9 +70,7 @@ class Resize
 			$skip = false;
 
 			// Tworzymy obraz odpowiedniego typu
-			switch ($extension)
-			{
-
+			switch ($extension) {
 				case 'jpeg':
 				case 'jpg': $img = imagecreatefromjpeg($file);
 					break;
@@ -84,7 +86,9 @@ class Resize
 			}
 
 			// Jeśli plik jest błędny to go pomija
-			if($skip == true) return false;
+			if ($skip) {
+				return false;
+			}
 
 
 			//Pobranie oryginalnych rozmiarów
@@ -93,50 +97,51 @@ class Resize
 
 
 			// Ustalanie i przeliczanie jednostek
-			switch ($this->unit)
-			{
+			switch ($this->unit) {
 				case 'percent':
-
 					// Szerokość
-					if( !is_null($this->width) ) $width = round( ($oldWidth*$this->width)/100 );
-					else if( $this->scale == "width" ) $width = round($oldWidth);
-					else if( $this->scale == "s-width" ) $width = round( ($oldWidth*$this->height)/100 );
+					if ( !is_null($this->width) ) {
+						$width = round( ($oldWidth*$this->width)/100 );
+					} elseif ( $this->scale == "width" ) {
+						$width = round($oldWidth);
+					} elseif ( $this->scale == "s-width" ) {
+						$width = round( ($oldWidth*$this->height)/100 );
+					}
 
-					// Wysokość
-					if( !is_null($this->height) ) $height = round( ($oldHeight*$this->height)/100 );
-					else if( $this->scale == "height" ) $height = round($oldHeight);
-					else if( $this->scale == "s-height" ) $height = round( ($oldHeight*$this->width)/100 );
-
+	 				// Wysokość
+					if ( !is_null($this->height) ) {
+						$height = round( ($oldHeight*$this->height)/100 );
+					} elseif ( $this->scale == "height" ) {
+						$height = round($oldHeight);
+					} elseif ( $this->scale == "s-height" ) {
+						$height = round( ($oldHeight*$this->width)/100 );
+					}
 					break;
 
-
-
 				case 'mm':
-
 					// Pobiera dpi obrazu (x i y)
 					list($dpix, $dpiy) = imageresolution($img);
 
 					// Szerokość
-					if( !is_null($this->width) ) $width = round( ($dpix/2.54)*($this->width/10) );
-					else if( $this->scale == "width" ) $width = round($oldWidth);
-					else if( $this->scale == "s-width" )
-					{
+					if ( !is_null($this->width) ) {
+						$width = round( ($dpix/2.54)*($this->width/10) );
+					} elseif ( $this->scale == "width" ){
+						 $width = round($oldWidth);
+					} elseif ( $this->scale == "s-width" ) {
 						$skala = ($this->height*100)/$oldHeight;
 						$width = round( ((($dpix/2.54)*($oldWidth/10) )*$skala)/100 );
 					}
 
 					// Wysokość
-					if( !is_null($this->height) ) $height = round( ($dpiy/2.54)*($this->height/10) );
-					else if( $this->scale == "height" ) $height = round($oldHeight);
-					else if( $this->scale == "s-height" )
-					{
+					if ( !is_null($this->height) ) {
+						$height = round( ($dpiy/2.54)*($this->height/10) );
+					} elseif ( $this->scale == "height" ) {
+						$height = round($oldHeight);
+					} elseif ( $this->scale == "s-height" ) {
 						$skala = ($this->width*100)/$oldWidth;
 						$height = round( ((($dpiy/2.54)*($oldHeight/10))*$skala)/100 );
 					}
-
 					break;
-
-
 
 				case 'cm':
 
@@ -144,19 +149,21 @@ class Resize
 					list($dpix, $dpiy) = imageresolution($img);
 
 					// Szerokość
-					if( !is_null($this->width) ) $width = round( ($dpix/2.54)*$this->width );
-					else if( $this->scale == "width" ) $width = round($oldWidth);
-					else if( $this->scale == "s-width" )
-					{
+					if ( !is_null($this->width) ) {
+						$width = round( ($dpix/2.54)*$this->width );
+					} elseif ( $this->scale == "width" ) {
+						$width = round($oldWidth);
+					} elseif ( $this->scale == "s-width" ) {
 						$skala = ($this->height*100)/$oldHeight;
 						$width = round( ((($dpix/2.54)*$oldWidth)*$skala)/100 );
 					}
 
 					// Wysokość
-					if( !is_null($this->height) ) $height = round( ($dpiy/2.54)*$this->height );
-					else if( $this->scale == "height" ) $height = round($oldHeight);
-					else if( $this->scale == "s-height" )
-					{
+					if ( !is_null($this->height) ) {
+						$height = round( ($dpiy/2.54)*$this->height );
+					} elseif ( $this->scale == "height" ) {
+						$height = round($oldHeight);
+					} elseif ( $this->scale == "s-height" ) {
 						$skala = ($this->width*100)/$oldWidth;
 						$height = round( ((($dpiy/2.54)*$oldHeight)*$skala)/100 );
 					}
@@ -167,21 +174,22 @@ class Resize
 
 				case 'px':
 				default:
-
 					// Szerokość
-					if( !is_null($this->width) ) $width = round($this->width);
-					else if( $this->scale == "width" ) $width = round($oldWidth);
-					else if( $this->scale == "s-width" )
-					{
+					if ( !is_null($this->width) ) {
+						$width = round($this->width);
+					} elseif ( $this->scale == "width" ) {
+						$width = round($oldWidth);
+					} elseif ( $this->scale == "s-width" ) {
 						$skala = ($this->height*100)/$oldHeight;
 						$width = round( ($oldWidth*$skala)/100 );
 					}
 
 					// Wysokość
-					if( !is_null($this->height) ) $height = round($this->height);
-					else if( $this->scale == "height" ) $height = round($oldHeight);
-					else if( $this->scale == "s-height" )
-					{
+					if( !is_null($this->height) ) {
+						$height = round($this->height);
+					} elseif ( $this->scale == "height" ) {
+						$height = round($oldHeight);
+					} elseif ( $this->scale == "s-height" ) {
 						$skala = ($this->width*100)/$oldWidth;
 						$height = round( ($oldHeight*$skala)/100 );
 					}
@@ -207,8 +215,7 @@ class Resize
 			$srcOut = $this->srcOut.'/'.$filename.'.'.$extension;
 
 			// Zapis nowego obrazu
-			switch ($extension)
-			{
+			switch ($extension) {
 				case 'jpg':
 				case 'jpeg': imagejpeg($newImg, $srcOut, 80);
 					break;
@@ -231,5 +238,3 @@ class Resize
 	}
 
 }
-
-?>

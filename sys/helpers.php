@@ -1,17 +1,17 @@
 <?php
 
 // Czyszczenie katalogów
-function clearDir($path) 
+function clearDir($path)
 {
 	$dir = new DirectoryIterator($path);
-	
-	foreach ($dir as $fileinfo) 
+
+	foreach ($dir as $fileinfo)
 	{
 		if ( $fileinfo->isFile() || $fileinfo->isLink() )
 		{
 			unlink($fileinfo->getPathName());
-		} 		
-		elseif ( !$fileinfo->isDot() && $fileinfo->isDir() ) 
+		}
+		elseif ( !$fileinfo->isDot() && $fileinfo->isDir() )
 		{
 			rmdir( $fileinfo->getPathName() );
 		}
@@ -22,8 +22,9 @@ function clearDir($path)
 // Sprawdza czy folder jest pusty
 function emptyDir($src)
 {
-	if( count(glob("$src/*")) === 0 ) return true;
-	else return false;
-}
+	if ( count(glob("$src/*")) === 0 ) {
+		return true;
+	}
 
-?>
+	return false;
+}

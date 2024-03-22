@@ -10,7 +10,7 @@ class Upload
 	{
 		// Zapisujemy tablice files
 		$this->files = $this->convertFilesArray($files);
-		// Ustawiamy błąd rozszerzenia 
+		// Ustawiamy błąd rozszerzenia
 		$this->checkExtensions();
 	}
 
@@ -19,33 +19,34 @@ class Upload
 	// Upload plików
 	public function uploadFiles()
 	{
-		for($i=0; $i<count($this->files); $i++)
-		{
+		for($i=0; $i<count($this->files); $i++) {
 			$file = $this->files[$i];
 			$err = $this->files[$i]['error'];
 			$name = $this->files[$i]['name'];
 			$tmp_name = $this->files[$i]['tmp_name'];
 			$status = 'ERR'; // Domyślny status ustawiony na błąd
 			$uploadDir = '../files_upload/'; // Folder uploadu
-	
+
 			// Sprawdzamy błędy
-			if( $err == 0 )
-			{
+			if ( $err == 0 ) {
 				// Przesłanie pliku na server
 				$result = move_uploaded_file($tmp_name, $uploadDir.$name);
 				// Jeśli wystąpił błąd
-				if ($result != 1) $err = 10;
-				else $status = 'OK';
+				if ($result != 1) {
+					$err = 10;
+				} else {
+					$status = 'OK';
+				}
 			}
-							
+
 			// Zapisanie info do tablicy zerowanie zmiennej błędu
 			$message = $this->getMessage($err);
 			$this->info[] = ['name'=>$name,'status'=>$status,'info'=>$message];
-			unset($message);			
-		} 
+			unset($message);
+		}
 		return $this->info;
 	}
-	
+
 
 
 	// Możliwe błędy przesyłania plików
@@ -71,10 +72,8 @@ class Upload
 	private function convertFilesArray($array)
 	{
 		$filesArray = [];
-		foreach($array as $key => $value) 
-		{
-			foreach($value as $k => $v)
-			{
+		foreach($array as $key => $value) {
+			foreach($value as $k => $v) {
 				$filesArray[$k][$key] = $v;
 			}
 		}
@@ -86,7 +85,7 @@ class Upload
 	// Ustawia błąd rozszerzenie pliku
 	private function checkExtensions()
 	{
-		# Dodanie rozszerzenia w tablicy $extensions 
+		# Dodanie rozszerzenia w tablicy $extensions
 		# wymaga dodania odpowiedniej metody do obsługi
 		# tego rozszerzenia w klasie Resize.
 
@@ -94,13 +93,14 @@ class Upload
 		$extensions = ['jpeg','jpg','png','gif'];
 
 		// Sprawdzamy rozszerzenie pliku
-		for($i=0; $i<count($this->files); $i++)
-		{
+		for($i=0; $i<count($this->files); $i++) {
 			// Pobieramy rozszerzenie z nazwy pliku
 			$fileExt = explode('.', $this->files[$i]['name']);
 			$fileExt = end($fileExt);
 			// Jeśli nie ma na liście to error na 9
-			if( !in_array($fileExt,$extensions) ) $this->files[$i]['error'] = 9;
+			if ( !in_array($fileExt,$extensions) ) {
+				$this->files[$i]['error'] = 9;
+			}
 		}
 	}
 
@@ -126,9 +126,9 @@ class Upload
 		$errCount = count($fileError);
 		$okCount = count($fileSucces);
 		$allCount = count($files);
-		
+
 		// Typ podsumowania
-		switch ($typ) 
+		switch ($typ)
 		{
 			// dla odrzuconyvch i błędnych plików
 			case 'err':
@@ -137,7 +137,7 @@ class Upload
 
 				if($errCount > 0)
 				{
-					foreach ($fileError as $key => $value) 
+					foreach ($fileError as $key => $value)
 						$result .= '<li>'.$value['file'].' => '.$value['info'].'</li>';
 				}
 
@@ -145,14 +145,14 @@ class Upload
 				break;
 
 
-			// Dla poprawnie przetworzonych 	
+			// Dla poprawnie przetworzonych
 			case 'ok':
 				$result = '<div class="upload-summary-ok">Pliki poprawne: ';
 				$result .= $okCount.'<ul>';
 
 				if($okCount > 0)
 				{
-					foreach ($fileSucces as $key => $value) 
+					foreach ($fileSucces as $key => $value)
 						$result .= '<li>'.$value['file'].' => '.$value['info'].'</li>';
 				}
 
@@ -169,15 +169,15 @@ class Upload
 				$result .= '</ul></div>';
 				return  $result; // Odrazu zwracamy wynik
 				break;
-			
+
 
 			default:
 				$result = '<div class="upload-summary-all">Przesłane pliki: ';
 				$result .= $allCount.'<ul>';
-				
+
 				if($allCount > 0)
 				{
-					foreach ($files as $key => $value) 
+					foreach ($files as $key => $value)
 						$result .= '<li>'.$value['file'].' => '.$value['info'].'</li>';
 				}
 
@@ -191,7 +191,7 @@ class Upload
 		{
 			$summaryEx = '<div class="upload-summary-extra"><ul>';
 			$summaryEx .= '<li>Wszystkich plików: '.$allCount.'</li>';
-			$summaryEx .= '<li>Poprawnych plików: '.$okCount.'</li>';	
+			$summaryEx .= '<li>Poprawnych plików: '.$okCount.'</li>';
 			$summaryEx .= '<li>Plików z błędami: '.$errCount.'</li>';
 			$summaryEx .= '</ul></div>';
 		}
