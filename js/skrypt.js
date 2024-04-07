@@ -4,28 +4,24 @@
  ****************************/
 
 // Precyzyjne zaokrąglanie liczb
-Number.prototype.round = function(miejsc)
-{
-	return +(Math.round(this+"e+"+miejsc)+"e-"+miejsc);
+Number.prototype.round = function (miejsc) {
+	return +(Math.round(this + "e+" + miejsc) + "e-" + miejsc);
 }
 
 
 // Blokowanie pól formularza
-function disabledForm(flag)
-{
+function disabledForm(flag) {
 	// Zablokowanie formularza
-	if(flag === true)
-	{
+	if (flag === true) {
 		$('input[type="file"]').attr("disabled", true);
-        $('input[type="submit"]').attr("disabled", true);
-        $('input[type="number"]').attr("readonly", true);
-		$('#form').find('input[type="radio"]:not(:checked)').each(function(){
+		$('input[type="submit"]').attr("disabled", true);
+		$('input[type="number"]').attr("readonly", true);
+		$('#form').find('input[type="radio"]:not(:checked)').each(function () {
 			$(this).attr('disabled', true);
 		});
 	}
 	// Odblokowanie formularza
-	else if(flag === false)
-	{
+	else if (flag === false) {
 		$('input').attr("disabled", false);
 		$('div[style="display: none;"] input').attr("disabled", true);
 		$('input').attr("readonly", false);
@@ -35,8 +31,7 @@ function disabledForm(flag)
 
 
 // Czyści ekran z informacji
-function cleanBoard()
-{
+function cleanBoard() {
 	$("#errors").empty();
 	$("#status").empty();
 	$("#info").empty();
@@ -49,8 +44,7 @@ function cleanBoard()
 
 
 // Ustawia liczbę wybranych plików
-function setCountFiles()
-{
+function setCountFiles() {
 	let countFiles = $('#file').prop('files')['length'];
 	$('input#count').val(countFiles);
 }
@@ -58,11 +52,9 @@ function setCountFiles()
 
 
 // Obsługa przycisków skali
-function setScale()
-{
+function setScale() {
 	let value = $('input[name="scale"]:checked').val();
-	switch(value)
-	{
+	switch (value) {
 		case 'width':
 		case 's-width':
 			$('#szerokosc').hide();
@@ -91,29 +83,27 @@ function setScale()
 
 
 // Dodanie jednostki do szer. i wys.
-function setUnit()
-{
+function setUnit() {
 	let value = $('input[name="unit"]:checked').val();
-	switch(value)
-	{
+	switch (value) {
 		case 'percent':
-			$('input#szer + span').text( ' % ' );
-			$('input#wys  + span').text( ' % ' );
+			$('input#szer + span').text(' % ');
+			$('input#wys  + span').text(' % ');
 			break;
 
 		case 'px':
-			$('input#szer + span').text( ' px ' );
-			$('input#wys  + span').text( ' px ' );
+			$('input#szer + span').text(' px ');
+			$('input#wys  + span').text(' px ');
 			break;
 
 		case 'cm':
-			$('input#szer + span').text( ' cm ' );
-			$('input#wys  + span').text( ' cm ' );
+			$('input#szer + span').text(' cm ');
+			$('input#wys  + span').text(' cm ');
 			break;
 
 		case 'mm':
-			$('input#szer + span').text( ' mm ' );
-			$('input#wys  + span').text( ' mm ' );
+			$('input#szer + span').text(' mm ');
+			$('input#wys  + span').text(' mm ');
 			break;
 	}
 }
@@ -121,8 +111,7 @@ function setUnit()
 
 
 // Zmienia status zadania
-function setStatus(text)
-{
+function setStatus(text) {
 	$(".valid").empty(); // Czyści ewentualne błędy walidacji
 	$("#errors").empty(); // Czyści ewentualne pozostałe błędy
 	$("#status").empty();
@@ -132,16 +121,14 @@ function setStatus(text)
 
 
 // Zwraca informacje
-function setInfo(text)
-{
+function setInfo(text) {
 	$("#info").append(text);
 }
 
 
 
 // Ustawienie błędu
-function setErrors(text)
-{
+function setErrors(text) {
 	//$('#loader').removeClass("errorsActiv");
 	$("#info").empty();
 	$('#form').addClass("errorsForm");
@@ -157,22 +144,20 @@ function setErrors(text)
 
 
 // Błędy walidacji
-function setValid(errors)
-{
+function setValid(errors) {
 	$(".valid").empty();
-	if(errors.scale != undefined) $("#vScale").append(errors.scale);
-	if(errors.files != undefined) $("#vFiles").append(errors.files);
-	if(errors.unit != undefined) $("#vUnit").append(errors.unit);
-	if(errors.size != undefined) $("#vSize").append(errors.size);
+	if (errors.scale != undefined) $("#vScale").append(errors.scale);
+	if (errors.files != undefined) $("#vFiles").append(errors.files);
+	if (errors.unit != undefined) $("#vUnit").append(errors.unit);
+	if (errors.size != undefined) $("#vSize").append(errors.size);
 }
 
 
 
-// Progres barr
-function progresBarr(val, total, id)
-{
+// Progres bar
+function progresBarr(val, total, id) {
 	// Wrtość value tagu progress
-	let progress = (val/total)*100;
+	let progress = (val / total) * 100;
 	progress = progress.round(2);
 	$(id).val(progress);
 }
@@ -180,8 +165,7 @@ function progresBarr(val, total, id)
 
 
 // Wymusza pobranie pliku
-function forceDownload()
-{
+function forceDownload() {
 	fileDownload();
 	window.location = $('a[download]').attr('href');
 }
@@ -189,8 +173,7 @@ function forceDownload()
 
 
 // Tworzy link do pobrania
-function createLink()
-{
+function createLink() {
 	const el = document.querySelector("#link");
 	const a = document.createElement("a");
 	a.setAttribute("href", "miniatures/images.zip");
@@ -206,12 +189,10 @@ function createLink()
 
 
 // Wywołuje funkcje zależnie od statusu
-function statusListener()
-{
+function statusListener() {
 	let status = $('#status').text();
 
-	switch (status)
-	{
+	switch (status) {
 		case 'Sprawdzanie parametrów...':
 			break;
 
@@ -233,25 +214,25 @@ function statusListener()
 			break;
 
 		case 'Zmieniono wielkość.':
-		 	setTimeout(createZip, 100);
-		 	break;
+			setTimeout(createZip, 100);
+			break;
 
 		case 'Tworzenie pliku zip...':
 			$('#loader').addClass("loader");
-		 	break;
+			break;
 
 		case 'Zip gotowy.':
 			$('#loader').removeClass("loader");
 			createLink();
-		 	setTimeout(forceDownload, 100);
-		 	break;
+			setTimeout(forceDownload, 100);
+			break;
 
 		case 'Pobieranie pliku...':
-		 	break;
+			break;
 
 		case 'Pobieranie zakończone.':
-		 	setTimeout(cleaner, 1000);
-		 	break;
+			setTimeout(cleaner, 1000);
+			break;
 	}
 }
 
@@ -266,8 +247,7 @@ function statusListener()
  ********************************************/
 
 // Wysłanie formularza
-function sendForm()
-{
+function sendForm() {
 	setStatus('Sprawdzanie parametrów...');
 
 	// Dodatkowe pola
@@ -278,40 +258,38 @@ function sendForm()
 	// Przygotowanie danych
 	let data = new FormData();
 	let inputs = $('#form').serializeArray();
-	inputs.push({ name:'size', value:totalSize });
-	inputs.push({ name:'send', value:'true' });
-	$.each(inputs, function (key, input){ data.append(input.name, input.value); });
+	inputs.push({ name: 'size', value: totalSize });
+	inputs.push({ name: 'send', value: 'true' });
+	$.each(inputs, function (key, input) { data.append(input.name, input.value); });
 
 	// Zapytanie ajax
 	$.ajax(
-	{
-	    url: "sys/ajax.php",
-	    method: "POST",
-	    processData: false,
-	    contentType: false,
-	    dataType:'json',
-	    data: data
-	})
-	.done(result => {
-        if(result.status == "success")
-        {
-        	setStatus('Sprawdzanie zakończone.'); // Wysyła pliki
-        	disabledForm(true);
-        }
-        else setValid(result.info); // Wyświetla błędy
-    })
-	.fail(error => {
-		console.log(error);
-		console.log(error.responseText);
-		setErrors('Wystąpił nieokreślony błąd 0');
-	});
+		{
+			url: "sys/ajax.php",
+			method: "POST",
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			data: data
+		})
+		.done(result => {
+			if (result.status == "success") {
+				setStatus('Sprawdzanie zakończone.'); // Wysyła pliki
+				disabledForm(true);
+			}
+			else setValid(result.info); // Wyświetla błędy
+		})
+		.fail(error => {
+			console.log(error);
+			console.log(error.responseText);
+			setErrors('Wystąpił nieokreślony błąd 0');
+		});
 }
 
 
 
 // Wysłanie plików
-function filesUpload()
-{
+function filesUpload() {
 	let ajax = new XMLHttpRequest();
 	let data = new FormData();
 	let error = false;
@@ -338,8 +316,7 @@ function filesUpload()
 	}
 
 	// Pasek postępu
-	function progressTransfer(e)
-	{
+	function progressTransfer(e) {
 		progresBarr(e.loaded, e.total, '#uploadBar');
 	}
 
@@ -348,20 +325,18 @@ function filesUpload()
 		if (this.status === 200) setInfo(this.response);
 		else // Status inny niż 200 = błąd
 		{
-			if(this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem '+this.status);
+			if (this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
 			else setErrors('Wystąpił nieokreślony błąd 1');
 		}
 	}
 
 	// Błędy i anulowanie
-	function errorTransfer(){ setErrors('Błąd wysyłania'); }
-	function abortTransfer(){ setErrors('Anulowanie wysyłania'); }
+	function errorTransfer() { setErrors('Błąd wysyłania'); }
+	function abortTransfer() { setErrors('Anulowanie wysyłania'); }
 
 	// Koniec wysyłania
-	function loadEnd()
-	{
-		if($('#errors').text() != '')
-		{
+	function loadEnd() {
+		if ($('#errors').text() != '') {
 			$('#uploadBar').val(0);
 			return false;
 		}
@@ -374,23 +349,21 @@ function filesUpload()
 
 
 // Sprawdzamy folder i liczbe plików
-function checkFilesDir()
-{
+function checkFilesDir() {
 	setStatus('Sprawdzanie plików...');
 
-	$.post( "sys/ajax.php", {checkdir:"true"}, data => {
+	$.post("sys/ajax.php", { checkdir: "true" }, data => {
 		// Zwracamy wyniki
-		if( data.status == "success" )
-		{
+		if (data.status == "success") {
 			setStatus('Zmiana wielkości plików...');
 			resize(data.info, 1);
 		}
-		else if( data.status == "error" ) setErrors(data.info);
+		else if (data.status == "error") setErrors(data.info);
 	}, "json")
-	.fail(error => {
-		console.log(error);
-		setErrors('Wystąpił nieokreślony błąd 2');
-	});
+		.fail(error => {
+			console.log(error);
+			setErrors('Wystąpił nieokreślony błąd 2');
+		});
 }
 
 
@@ -399,88 +372,80 @@ function checkFilesDir()
 let resizeErr = 0;
 let resizeOk = 0;
 
-function resize(countFiles, fileNo)
-{
+function resize(countFiles, fileNo) {
 	// Przygotowanie danych
 	let data = new FormData();
 	let inputs = $('#form').serializeArray();
-	inputs.push({ name:'resize', value:'true' });
-	$.each(inputs, function (key, input){ data.append(input.name, input.value); });
+	inputs.push({ name: 'resize', value: 'true' });
+	$.each(inputs, function (key, input) { data.append(input.name, input.value); });
 	data.append('resizeNo', fileNo);
 
 	// Zapytanie ajax
 	$.ajax(
-	{
-	    url: "sys/ajax.php",
-	    method: "POST",
-	    processData: false,
-	    contentType: false,
-	    dataType:'json',
-	    data: data
-	})
-	.done(result => {
-
-		progresBarr(fileNo, countFiles, '#resizeBar'); // Progres barr
-
-		if(result.status == "success")
-        {
-			resizeOk++;
-        }
-        else
 		{
-			resizeErr++;
-			console.log(result.info); // Wyświetla błędy
-		}
+			url: "sys/ajax.php",
+			method: "POST",
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			data: data
+		})
+		.done(result => {
 
-		if(fileNo < countFiles)
-		{
-			// Rekurencja dla kolejnych plików
-			fileNo++;
-			resize(countFiles, fileNo);
-		}
-		else
-		{
-			setInfo('<p>Pliki zmienione: '+resizeOk+'</p>');
-			resizeOk = 0;
-			setInfo('<p>Pliki niezmienione: '+resizeErr+'</p>');
-			resizeErr = 0;
-			setStatus('Zmieniono wielkość.');
-		}
-    })
-	.fail(error => {
-		console.log(error);
-		console.log(error.responseText);
-		setErrors('Wystąpił nieokreślony błąd 3');
-	});
+			progresBarr(fileNo, countFiles, '#resizeBar'); // Progres barr
+
+			if (result.status == "success") {
+				resizeOk++;
+			}
+			else {
+				resizeErr++;
+				console.log(result.info); // Wyświetla błędy
+			}
+
+			if (fileNo < countFiles) {
+				// Rekurencja dla kolejnych plików
+				fileNo++;
+				resize(countFiles, fileNo);
+			}
+			else {
+				setInfo('<p>Pliki zmienione: ' + resizeOk + '</p>');
+				resizeOk = 0;
+				setInfo('<p>Pliki niezmienione: ' + resizeErr + '</p>');
+				resizeErr = 0;
+				setStatus('Zmieniono wielkość.');
+			}
+		})
+		.fail(error => {
+			console.log(error);
+			console.log(error.responseText);
+			setErrors('Wystąpił nieokreślony błąd 3');
+		});
 }
 
 
 
 // Przygotowanie zipa do pobrania
-function createZip()
-{
+function createZip() {
 	setStatus('Tworzenie pliku zip...');
 
-	$.post( "sys/ajax.php", {zip:"true"}, data => {
+	$.post("sys/ajax.php", { zip: "true" }, data => {
 		// Zwracamy wyniki
-		if( data.status == "error" ) {setErrors(data.info);}
-		else if( data.status == "success" )
-		{
-			setInfo('<p>'+data.info+'</p>');
+		if (data.status == "error") { setErrors(data.info); }
+		else if (data.status == "success") {
+			setInfo('<p>' + data.info + '</p>');
 			setStatus('Zip gotowy.');
 		}
 	}, "json")
-	.fail(error => {
-		console.log(error);
-		setErrors('Wystąpił nieokreślony błąd 4');
-	});
+		.fail(error => {
+			console.log(error);
+			setErrors('Wystąpił nieokreślony błąd 4');
+		});
 }
 
 
 
 // Postęp pobierania pliku
-function fileDownload()
-{
+function fileDownload() {
 	// Wyłączamy bo użycie metody GET wywoła reload strony
 	$(window).off("beforeunload");
 
@@ -500,37 +465,34 @@ function fileDownload()
 	}
 
 	// Pasek postępu
-	function progressTransfer(e)
-	{
+	function progressTransfer(e) {
 		progresBarr(e.loaded, e.total, '#downloadBar');
 	}
 
 	// Zakończenie przesyłania
 	function loadTransfer() {
-		if (this.status === 200)
-		{
+		if (this.status === 200) {
 			setStatus('Pobieranie zakończone.');
 			// Pobraliśmy już plik więc włączamy czyszczenie z powrotem
-			$(window).on( "beforeunload", cleaner);
+			$(window).on("beforeunload", cleaner);
 		}
 		else // Status inny niż 200 = błąd
 		{
-			if(this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem '+this.status);
+			if (this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
 			else setErrors('Wystąpił nieokreślony błąd 5');
 		}
 	}
 
 	// Błędy i anulowanie
-	function errorTransfer(){ setErrors('Błąd pobierania'); }
-	function abortTransfer(){ setErrors('Anulowanie pobierania'); }
+	function errorTransfer() { setErrors('Błąd pobierania'); }
+	function abortTransfer() { setErrors('Anulowanie pobierania'); }
 }
 
 
 
 // Wywołuje czyszczenie plików
-function cleaner()
-{
-	$.post( "sys/ajax.php", {clean:"true"} );
+function cleaner() {
+	$.post("sys/ajax.php", { clean: "true" });
 	$('a[download]').remove();
 	$('#link').removeClass("brokenLink");
 	$('#errors').removeClass("errorsActiv");
@@ -548,7 +510,7 @@ function cleaner()
  *	Wywołania po załadowaniu strony  *
  *	-------------------------------  *
  *************************************/
-document.addEventListener('DOMContentLoaded', function(event) {
+document.addEventListener('DOMContentLoaded', function (event) {
 
 	// Selectboxy ustawienia jednostki
 	$('input[name="unit"]').click(setUnit); setUnit();
@@ -560,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 	$('#file').change(setCountFiles);
 
 	// Wysłanie plików
-	$('#form').submit(function(event){
+	$('#form').submit(function (event) {
 		event.preventDefault();
 		cleanBoard();
 		sendForm();
@@ -570,6 +532,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
 	$('#status').on('DOMSubtreeModified', statusListener);
 
 	// Czyszczenie przy zamknięciu i odświerzeniu strony
-	$(window).on( "beforeunload", cleaner);
+	$(window).on("beforeunload", cleaner);
 
 });

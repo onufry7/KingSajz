@@ -1,100 +1,106 @@
 <!doctype html>
 <html lang="pl-PL">
-	<head>
-		<meta charset="utf-8">
-		<meta name="description" content="KingSajz - Aplikacja zmieniająca rozmiar plików graficznych.">
-		<meta name="keywords" content="KingSajz, zmiana rozmiaru, resize img, zmiana rozmiaru obrazka">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="css/style.css">
-		<script src="js/jquery-3.4.1.min.js"></script>
-		<script src="js/skrypt.js"></script>
-		<title>KingSajz</title>
-	</head>
 
-	<body>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="KingSajz - Aplikacja zmieniająca rozmiar plików graficznych.">
+	<meta name="keywords" content="KingSajz, zmiana rozmiaru, resize img, zmiana rozmiaru obrazka">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="css/style.css">
+	<script src="js/jquery-3.7.1.min.js"></script>
+	<script src="js/skrypt.js"></script>
+	<title>KingSajz</title>
+</head>
 
-		<header>
-			<h1>KING<span>Sajz</span></h1>
-		</header>
+<body>
 
-		<main>
+	<header>
+		<h1>KING<span>Sajz</span></h1>
+	</header>
 
-			<form enctype="multipart/form-data" method="POST" id="form">
+	<main>
 
-				<fieldset class="fild unit">
-					<legend> Jednostka </legend>
-					<span id="vUnit" class="valid"></span>
-					<label><input type="radio" name="unit" value="percent"> %</label>
-					<label><input type="radio" name="unit" value="px" checked> px</label>
-					<label><input type="radio" name="unit" value="cm"> cm</label>
-					<label><input type="radio" name="unit" value="mm"> mm</label>
-				</fieldset>
+		<form enctype="multipart/form-data" method="POST" id="form">
 
-				<fieldset class="fild scale">
-					<legend> Skala </legend>
-					<span id="vScale" class="valid"></span>
-					<div class="row"><label><input type="radio" name="scale" value="none" checked> Brak </label></div>
-					<br>
-					<div class="row"><label><input type="radio" name="scale" value="width"> Zachowaj szerokość </label></div>
-					<div class="row"><label><input type="radio" name="scale" value="height"> Zachowaj wysokość </label></div>
-					<br>
-					<div class="row"><label><input type="radio" name="scale" value="s-width"> Skaluj szerokość </label></div>
-					<div class="row"><label><input type="radio" name="scale" value="s-height"> Skaluj wysokość </label></div>
-				</fieldset>
+			<fieldset class="fild unit">
+				<legend> Jednostka </legend>
+				<span id="vUnit" class="valid"></span>
+				<label><input type="radio" name="unit" value="percent"> %</label>
+				<label><input type="radio" name="unit" value="px" checked> px</label>
+				<label><input type="radio" name="unit" value="cm"> cm</label>
+				<label><input type="radio" name="unit" value="mm"> mm</label>
+			</fieldset>
 
-				<fieldset class="fild size">
-					<legend> Wymiary </legend>
-					<span id="vSize" class="valid"></span>
-					<div class="row" id="szerokosc">
-						<label>Szerokość:
-							<input type="number" id="szer" name="width" min="1" value="">
-							<span></span>
-						</label>
-					</div>
-					<div class="row" id="wysokosc">
-						<label>Wysokość:
-							<input type="number" id="wys" name="height" min="1" value="">
-							<span></span>
-						</label>
-					</div>
-				</fieldset>
+			<fieldset class="fild scale">
+				<legend> Skala </legend>
+				<span id="vScale" class="valid"></span>
+				<div class="row"><label><input type="radio" name="scale" value="none" checked> Brak </label></div>
+				<br>
+				<div class="row"><label><input type="radio" name="scale" value="width"> Zachowaj szerokość </label>
+				</div>
+				<div class="row"><label><input type="radio" name="scale" value="height"> Zachowaj wysokość </label>
+				</div>
+				<br>
+				<div class="row"><label><input type="radio" name="scale" value="s-width"> Skaluj szerokość </label>
+				</div>
+				<div class="row"><label><input type="radio" name="scale" value="s-height"> Skaluj wysokość </label>
+				</div>
+			</fieldset>
 
-				<div class="fild">
-					<span id="vFiles" class="valid"></span>
-					<label>Plik/i:
-						<input type="file" id="file" name="file" multiple accept="image/x-png,image/gif,image/jpeg">
+			<fieldset class="fild size">
+				<legend> Wymiary </legend>
+				<span id="vSize" class="valid"></span>
+				<div class="row" id="szerokosc">
+					<label>Szerokość:
+						<input type="number" id="szer" name="width" min="1" value="">
+						<span></span>
 					</label>
 				</div>
-
-				<input type="hidden" name="count" id="count" value="">
-
-				<div class="submitFild">
-					<input type="submit" name="submit" value="Wyślij" class="button">
+				<div class="row" id="wysokosc">
+					<label>Wysokość:
+						<input type="number" id="wys" name="height" min="1" value="">
+						<span></span>
+					</label>
 				</div>
+			</fieldset>
 
-			</form>
-
-
-			<div id="console">
-				<div id="status">Status</div>
-
-				<div id="errors"></div>
-				<div id="info"></div>
-
-				<div id="loader"></div>
-
-				<div id="link"></div>
-
-				<div id="progresy">
-					<p>Wysyłanie: <progress id="uploadBar" value="0" max="100"></progress></p>
-					<p>Skalowanie: <progress id="resizeBar" value="0" max="100"></progress></p>
-					<p>Pobieranie: <progress id="downloadBar" value="0" max="100"></progress></p>
-				</div>
+			<div class="fild">
+				<span id="vFiles" class="valid"></span>
+				<label>Plik/i:
+					<input type="file" id="file" name="file" multiple accept="image/x-png,image/gif,image/jpeg">
+				</label>
 			</div>
 
-		</main>
+			<input type="hidden" name="count" id="count" value="">
 
-		<footer> 2019 &copy; Szymon Burnejko </footer>
+			<div class="submitFild">
+				<input type="submit" name="submit" value="Wyślij" class="button">
+			</div>
 
-	</body>
+		</form>
+
+
+		<div id="console">
+			<div id="status">Status</div>
+
+			<div id="errors"></div>
+			<div id="info"></div>
+
+			<div id="loader"></div>
+
+			<div id="link"></div>
+
+			<div id="progresy">
+				<p>Wysyłanie: <progress id="uploadBar" value="0" max="100"></progress></p>
+				<p>Skalowanie: <progress id="resizeBar" value="0" max="100"></progress></p>
+				<p>Pobieranie: <progress id="downloadBar" value="0" max="100"></progress></p>
+			</div>
+		</div>
+
+	</main>
+
+	<footer> 2019 &copy; Szymon Burnejko </footer>
+
+</body>
+
 </html>
