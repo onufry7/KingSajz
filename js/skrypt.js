@@ -3,6 +3,8 @@
  *	 ---------------------  *
  ****************************/
 
+const ajaxPath = window.location.pathname + "sys/ajax.php"
+
 // Precyzyjne zaokrąglanie liczb
 Number.prototype.round = function (miejsc) {
 	return +(Math.round(this + "e+" + miejsc) + "e-" + miejsc);
@@ -262,7 +264,7 @@ function sendForm() {
 	// Zapytanie ajax
 	$.ajax(
 		{
-			url: "../sys/ajax.php",
+			url: ajaxPath,
 			method: "POST",
 			processData: false,
 			contentType: false,
@@ -289,7 +291,6 @@ function sendForm() {
 function filesUpload() {
 	let ajax = new XMLHttpRequest();
 	let data = new FormData();
-	let error = false;
 
 	// Przetwarza pliki z formularza
 	let files = $('#file')[0].files;
@@ -320,11 +321,8 @@ function filesUpload() {
 	// Zakończenie przesyłania
 	function loadTransfer() {
 		if (this.status === 200) setInfo(this.response);
-		else // Status inny niż 200 = błąd
-		{
-			if (this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
-			else setErrors('Wystąpił nieokreślony błąd 1');
-		}
+		else if (this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
+		else setErrors('Wystąpił nieokreślony błąd 1');
 	}
 
 	// Błędy i anulowanie
@@ -349,7 +347,7 @@ function filesUpload() {
 function checkFilesDir() {
 	setStatus('Sprawdzanie plików...');
 
-	$.post("sys/ajax.php", { checkdir: "true" }, data => {
+	$.post(ajaxPath, { checkdir: "true" }, data => {
 		// Zwracamy wyniki
 		if (data.status == "success") {
 			setStatus('Zmiana wielkości plików...');
@@ -380,7 +378,7 @@ function resize(countFiles, fileNo) {
 	// Zapytanie ajax
 	$.ajax(
 		{
-			url: "sys/ajax.php",
+			url: ajaxPath,
 			method: "POST",
 			processData: false,
 			contentType: false,
@@ -425,7 +423,7 @@ function resize(countFiles, fileNo) {
 function createZip() {
 	setStatus('Tworzenie pliku zip...');
 
-	$.post("sys/ajax.php", { zip: "true" }, data => {
+	$.post(ajaxPath, { zip: "true" }, data => {
 		// Zwracamy wyniki
 		if (data.status == "error") { setErrors(data.info); }
 		else if (data.status == "success") {
@@ -473,11 +471,8 @@ function fileDownload() {
 			// Pobraliśmy już plik więc włączamy czyszczenie z powrotem
 			$(window).on("beforeunload", cleaner);
 		}
-		else // Status inny niż 200 = błąd
-		{
-			if (this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
-			else setErrors('Wystąpił nieokreślony błąd 5');
-		}
+		else if (this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
+		else setErrors('Wystąpił nieokreślony błąd 5');
 	}
 
 	// Błędy i anulowanie
@@ -489,7 +484,7 @@ function fileDownload() {
 
 // Wywołuje czyszczenie plików
 function cleaner() {
-	$.post("sys/ajax.php", { clean: "true" });
+	$.post(ajaxPath, { clean: "true" });
 	$('a[download]').remove();
 	$('#link').removeClass("brokenLink");
 	$('#errors').removeClass("errorsActiv");
