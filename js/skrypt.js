@@ -3,7 +3,7 @@
  *	 ---------------------  *
  ****************************/
 
-const ajaxPath = window.location.pathname + "sys/ajax.php"
+const ajaxPath = window.location.pathname + 'sys/ajax.php';
 
 // Precyzyjne zaokrąglanie liczb
 Number.prototype.round = function (miejsc) {
