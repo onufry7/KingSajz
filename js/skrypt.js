@@ -35,7 +35,6 @@ function cleanBoard() {
 	$("#errors").empty();
 	$("#status").empty();
 	$("#info").empty();
-
 	$('#downloadBar').val(0);
 	$('#uploadBar').val(0);
 	$('#resizeBar').val(0);
@@ -129,7 +128,6 @@ function setInfo(text) {
 
 // Ustawienie błędu
 function setErrors(text) {
-	//$('#loader').removeClass("errorsActiv");
 	$("#info").empty();
 	$('#form').addClass("errorsForm");
 
@@ -137,8 +135,7 @@ function setErrors(text) {
 	$("#status").empty().append('! ERROR !');
 
 	$('#errors').addClass("errorsActiv");
-	$("#errors").empty();
-	$("#errors").append(text);
+	$("#errors").empty().append(text);
 }
 
 
@@ -265,7 +262,7 @@ function sendForm() {
 	// Zapytanie ajax
 	$.ajax(
 		{
-			url: "sys/ajax.php",
+			url: "../sys/ajax.php",
 			method: "POST",
 			processData: false,
 			contentType: false,
@@ -282,7 +279,7 @@ function sendForm() {
 		.fail(error => {
 			console.log(error);
 			console.log(error.responseText);
-			setErrors('Wystąpił nieokreślony błąd 0');
+			setErrors('Wystąpił błąd zapytania ajax!');
 		});
 }
 
@@ -528,8 +525,20 @@ document.addEventListener('DOMContentLoaded', function (event) {
 		sendForm();
 	});
 
-	// Nasłuchiwanie statusu
-	$('#status').on('DOMSubtreeModified', statusListener);
+	// Utworzenie obserwatora z funkcją zwrotną
+	const observer = new MutationObserver(function (mutationsList, observer) {
+		for (let mutation of mutationsList) {
+			if (mutation.type === 'childList' || mutation.type === 'subtree') {
+				statusListener();
+			}
+		}
+	});
+
+	// Konfiguracja obserwatora - nasłuchiwanie na zmiany w poddrzewie
+	const config = { subtree: true, childList: true };
+
+	// Rozpoczęcie obserwacji na elemencie o id 'status'
+	observer.observe(document.getElementById('status'), config);
 
 	// Czyszczenie przy zamknięciu i odświerzeniu strony
 	$(window).on("beforeunload", cleaner);

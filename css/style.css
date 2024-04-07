@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Lato|Noto+Serif:700&display=swap&subset=latin-ext');
 
-body
-{
+body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Lato', sans-serif;
@@ -11,14 +10,17 @@ body
 	text-shadow: 1px 1px 1px #000;
 }
 
+.version {
+	font-size: 0.75em;
+}
+
 /* Nagłówek strony */
-header
-{
+header {
 	padding: 0;
 	margin: 0;
 }
-header h1
-{
+
+header h1 {
 	font-family: 'Noto Serif', serif;
 	font-weight: 700;
 	font-size: 4em;
@@ -31,9 +33,9 @@ header h1
 	position: relative;
 	z-index: 2;
 }
-header h1 > span
-{
-	color: 	#D4213D;
+
+header h1>span {
+	color: #D4213D;
 	display: inline-block;
 	transform-origin: left bottom;
 	animation: flexed 5s ease-in-out 0.5s 1 normal forwards;
@@ -42,20 +44,18 @@ header h1 > span
 
 
 /* Kontent strony */
-main
-{
+main {
 	max-width: 1000px;
 	margin: 35px auto;
 	padding: 0 20px;
-	display: flex; 
-	flex-direction: row; 
+	display: flex;
+	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
 /* Stopka */
-footer
-{
+footer {
 	text-align: center;
 	margin: 30px auto 20px;
 }
@@ -65,43 +65,40 @@ footer
 
 
 /* Elementy formularza */
-form
-{
+form {
 	box-sizing: border-box;
-	text-align: left;	
+	text-align: left;
 	max-width: 540px;
 	margin-bottom: 20px;
 }
 
-.fild
-{
+.fild {
 	padding: 5px 17px 15px;
 	margin: 15px 0 5px;
 	border: none;
 	border-bottom: 1px solid #555;
 }
-.submitFild
-{
+
+.submitFild {
 	margin-top: 25px;
 	margin-bottom: 15px;
 	text-align: center;
 }
-fieldset label
-{
+
+fieldset label {
 	margin: 0 0 5px 30px;
 	display: inline-block;
 	cursor: pointer;
 }
-.row
-{
+
+.row {
 	display: inline-block;
 	width: 250px;
 	margin: 0;
 }
 
 /* Inputy */
-input[type="number"]
-{
+input[type="number"] {
 	width: 60px;
 	padding: 2px 5px;
 	font-size: 1em;
@@ -111,14 +108,13 @@ input[type="number"]
 	color: #000;
 	cursor: pointer;
 }
-input[type="number"]:focus
-{
+
+input[type="number"]:focus {
 	outline: none;
 	border: 2px solid #0ff;
 }
 
-input[type="file"]
-{
+input[type="file"] {
 	font-size: 1em;
 	background-color: #06f;
 	border: none;
@@ -126,13 +122,12 @@ input[type="file"]
 	color: #ccc;
 	cursor: pointer;
 }
-input[type="file"]:focus
-{
+
+input[type="file"]:focus {
 	outline: 1px solid #0ff;
 }
 
-input[type="radio"]
-{
+input[type="radio"] {
 	appearance: none;
 	-moz-appearance: none;
 	-webkit-appearance: none;
@@ -143,25 +138,24 @@ input[type="radio"]
 	border: 2px solid #eee;
 	cursor: pointer;
 }
+
 input[type="radio"]:checked,
-input[type="radio"]:checked:hover
-{
+input[type="radio"]:checked:hover {
 	border: 2px solid #eee;
 	background-color: #06f;
 }
-input[type="radio"]:focus
-{
+
+input[type="radio"]:focus {
 	outline: none;
 	border-color: #0ff;
 }
-input[type="radio"]:hover
-{
+
+input[type="radio"]:hover {
 	background-color: #aaa;
 }
 
 /* Przyciski */
-.button 
-{
+.button {
 	display: inline-block;
 	padding: 10px 25px;
 	background-color: #06f;
@@ -177,37 +171,36 @@ input[type="radio"]:hover
 	transition-property: letter-spacing;
 	transition-duration: 1s;
 }
-.button:hover 
-{
+
+.button:hover {
 	background-color: #00f;
 	border-color: #0ff;
 	letter-spacing: 1px;
 	animation: dring 1s ease 2s infinite normal forwards;
 }
-.button:active 
-{
+
+.button:active {
 	position: relative;
 	top: 1px;
 	left: 1px;
 }
-.button:focus 
-{
+
+.button:focus {
 	outline: none;
 	border-color: #06f;
 	letter-spacing: 1px;
 }
 
 /* Formularz przy błędie aplikacji */
-form.errorsForm label
-{
+form.errorsForm label {
 	cursor: default;
 }
+
 form.errorsForm input,
 form.errorsForm input:focus,
 form.errorsForm input:hover,
 form.errorsForm input:checked,
-form.errorsForm input:checked:hover
-{
+form.errorsForm input:checked:hover {
 	cursor: default;
 	background-color: #ddd;
 	border-color: #ddd;
@@ -215,14 +208,13 @@ form.errorsForm input:checked:hover
 }
 
 /* Błędy walidacji */
-.valid
-{
+.valid {
 	font-size: 0.8em;
 	color: #d00;
 	text-align: center;
 }
-.valid ul
-{
+
+.valid ul {
 	list-style: none;
 	padding: 0;
 	margin: 0 0 15px 0;
@@ -231,14 +223,13 @@ form.errorsForm input:checked:hover
 
 
 /* Okno konsoli */
-#console
-{
+#console {
 	width: 400px;
 	box-sizing: border-box;
 	border: 2px solid #00f;
 	border-radius: 10px;
 	padding: 8px 10px;
-	background-color: rgba(70,70,70,0.2);
+	background-color: rgba(70, 70, 70, 0.2);
 	position: relative;
 	display: flex;
 	justify-content: space-between;
@@ -248,8 +239,7 @@ form.errorsForm input:checked:hover
 
 
 /* Pole statusu */
-#status
-{
+#status {
 	text-align: center;
 	padding: 5px;
 	border-bottom: 1px solid #06f;
@@ -258,32 +248,30 @@ form.errorsForm input:checked:hover
 
 
 /* Pole informacji */
-#info
-{
+#info {
 	width: 90%;
 	margin: 0 auto;
 }
-#info ul
-{
+
+#info ul {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 }
-#info > p
-{
+
+#info>p {
 	margin: 5px 0;
 	padding: 0;
 }
 
 
 
-/* Błędy alikacji - konsola*/
-#errors
-{
+/* Błędy aplikacji - konsola*/
+#errors {
 	display: none;
 }
-#errors.errorsActiv
-{
+
+#errors.errorsActiv {
 	display: block;
 	width: 90%;
 	margin: auto;
@@ -292,29 +280,27 @@ form.errorsForm input:checked:hover
 	border-radius: 10px;
 	text-align: center;
 }
-.errorsActiv
-{
+
+.errorsActiv {
 	color: #f00;
 }
 
 
 
 /* Pole progres barów */
-#progresy
-{
+#progresy {
 	padding: 10px;
 	border-top: 1px solid #06f;
 	text-align: center;
 }
-#progresy > p
-{
+
+#progresy>p {
 	margin: 0;
 	padding: 4px;
 }
 
 /* Wygląd progres barów */
-progress 
-{
+progress {
 	background-color: #eee;
 	padding: 0px;
 	height: 22px;
@@ -323,44 +309,43 @@ progress
 	border-radius: 5px;
 	position: relative;
 }
-progress::after
-{ 
+
+progress::after {
 	content: attr(value)" %";
 	font-size: 0.9em;
 	position: absolute;
 	bottom: 0;
 	left: 50%;
-} 
+}
+
 /* chrome, opera, safari */
-progress::-webkit-progress-bar 
-{
+progress::-webkit-progress-bar {
 	background-color: #eee;
 	border-radius: 5px;
 	position: relative;
 }
-progress::-webkit-progress-value 
-{
+
+progress::-webkit-progress-value {
 	background-color: #06f;
 	border-radius: 5px;
 	position: relative;
 }
+
 /* Firefox i Edge */
-progress::-moz-progress-bar 
-{
+progress::-moz-progress-bar {
 	background-color: #06f;
 	border-radius: 5px;
 	position: relative;
 }
+
 /* Edge */
-progress::-ms-fill 
-{
+progress::-ms-fill {
 	color: #06f;
 }
 
 
 /* Kółko przy zipowaniu */
-.loader 
-{
+.loader {
 	border-left: 25px solid #eee;
 	border-right: 25px solid #eee;
 	border-bottom: 25px solid #06f;
@@ -380,12 +365,11 @@ progress::-ms-fill
 
 
 
-#link
-{
+#link {
 	display: none;
 }
-#link.brokenLink
-{
+
+#link.brokenLink {
 	display: block;
 	width: 50%;
 	margin: auto;
@@ -401,70 +385,154 @@ progress::-ms-fill
  ************/
 
 /* Indykator zipowania */
-@keyframes spin 
-{
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 /* spadanie nagłówka */
-@keyframes fall
-{
-	0% { top: -100px; }
-	50% { top: 0; transform-origin: bottom; transform: scaleY(0.5); }
-	75% { top: 0; transform-origin: bottom; transform: scaleY(1.4); }
-	100% { transform-origin: bottom; transform: scaleY(1); }
+@keyframes fall {
+	0% {
+		top: -100px;
+	}
+
+	50% {
+		top: 0;
+		transform-origin: bottom;
+		transform: scaleY(0.5);
+	}
+
+	75% {
+		top: 0;
+		transform-origin: bottom;
+		transform: scaleY(1.4);
+	}
+
+	100% {
+		transform-origin: bottom;
+		transform: scaleY(1);
+	}
 }
 
 /* Gibanie elementu span nagłowka */
-@keyframes flexed
-{
-	0% { transform: rotate(0deg); }
-	20% { transform: rotate(65deg); }
-	40% { transform: rotate(8deg); }
-	60% { transform: rotate(35deg); }
-	80% { transform: rotate(15deg); }
-	100% { transform: rotate(20deg); }
+@keyframes flexed {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	20% {
+		transform: rotate(65deg);
+	}
+
+	40% {
+		transform: rotate(8deg);
+	}
+
+	60% {
+		transform: rotate(35deg);
+	}
+
+	80% {
+		transform: rotate(15deg);
+	}
+
+	100% {
+		transform: rotate(20deg);
+	}
 }
 
 /* Wibrowanie buttona */
-@keyframes dring
-{
-	0% { transform: rotate(0deg); }
-	2% { transform: rotate(7deg); }
-	4% { transform: rotate(0deg); }
-	6% { transform: rotate(-7deg); }
-	8% { transform: rotate(0deg); }
-	10% { transform: rotate(7deg); }
-	12% { transform: rotate(0deg); }
-	14% { transform: rotate(-7deg); }
-	16% { transform: rotate(0deg); }
-	18% { transform: rotate(7deg); }
-	20% { transform: rotate(0deg); }
-	22% { transform: rotate(-7deg); }
-	24% { transform: rotate(0deg); }
+@keyframes dring {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	2% {
+		transform: rotate(7deg);
+	}
+
+	4% {
+		transform: rotate(0deg);
+	}
+
+	6% {
+		transform: rotate(-7deg);
+	}
+
+	8% {
+		transform: rotate(0deg);
+	}
+
+	10% {
+		transform: rotate(7deg);
+	}
+
+	12% {
+		transform: rotate(0deg);
+	}
+
+	14% {
+		transform: rotate(-7deg);
+	}
+
+	16% {
+		transform: rotate(0deg);
+	}
+
+	18% {
+		transform: rotate(7deg);
+	}
+
+	20% {
+		transform: rotate(0deg);
+	}
+
+	22% {
+		transform: rotate(-7deg);
+	}
+
+	24% {
+		transform: rotate(0deg);
+	}
 }
 
 
 /*******
  * RWD *
  *******/
-@media screen and (max-width: 980px) 
-{
-	main{ justify-content: space-around; }
+@media screen and (max-width: 980px) {
+	main {
+		justify-content: space-around;
+	}
 }
 
-@media screen and (max-width: 500px) 
-{
-	header h1{ font-size: 2.5em; }
-	.row, input[type="file"]{ width: 100%; }
-	progress{ width: 100%; }
+@media screen and (max-width: 500px) {
+	header h1 {
+		font-size: 2.5em;
+	}
+
+	.row,
+	input[type="file"] {
+		width: 100%;
+	}
+
+	progress {
+		width: 100%;
+	}
 }
 
-@media screen and (max-width: 350px) 
-{
-	header h1{ font-size: 2em; }
-	main{ padding: 5px; margin: 0; }
-}
+@media screen and (max-width: 350px) {
+	header h1 {
+		font-size: 2em;
+	}
 
-  
+	main {
+		padding: 5px;
+		margin: 0;
+	}
+}
