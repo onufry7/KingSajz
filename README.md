@@ -2,11 +2,11 @@
 
 Aplikacja do zmiany rozmiaru plików graficznych.
 Obsługiwane formaty plików: PNG, JPG, GIF.
-Wymaga do działania biblioteki gd i zip
- - w php.ini odblokować: z ;extension=gd na extension=gd 
- - w php.ini odblokować: z ;extension=zip na extension=zip
 Wersji PHP >= 8.0
+Wymaga do działania biblioteki gd i zip
 
+- w php.ini odblokować: z ;extension=gd na extension=gd
+- w php.ini odblokować: z ;extension=zip na extension=zip
 
 ## Obsługa
 
@@ -20,13 +20,11 @@ Program stara sie wymusić na przeglądarce automatyczne pobranie
 zwróconego pliku a w przypadku niepowodzenia pozostawi link do ręcznego
 pobrania wygenerowanego archiwum zip.
 
-
 ### Pliki/ini
 
 Pole służące do przekazania plików które chcemy zmodyfikować.
 możemy przekazać jeden bądź wiele plików niezależnie od tego
 co wybierzemy program zwróci archiwum zip zawierające plik/i.
-
 
 ### Wymiary
 
@@ -37,7 +35,6 @@ nastąpi pomniejszenie rozmiaru plików.
 
 Jeśli pliki źródłowe mają mniejszy rozmiar niż tutaj ustalony to
 nastąpi powiększenie rozmiaru plików.
-
 
 ### Jednostka
 
@@ -54,7 +51,6 @@ Jednostka dotyczy plików wynikowych i jest niezależna od wielkości
 plików wejściowych. Zawsze program będzie przeliczał z pikseli na pozostałe
 jednostki wielkości. Czyli możemy przekazać pliki które mają 20px na 20px i określić
 że chcemy otrzymać pliki które będą mieć 10cm na 10cm.
-
 
 ### Skala
 

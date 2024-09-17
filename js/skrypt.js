@@ -321,7 +321,7 @@ function filesUpload() {
 	// Zakończenie przesyłania
 	function loadTransfer() {
 		if (this.status === 200) setInfo(this.response);
-		else if (this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
+		else if (typeof this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
 		else setErrors('Wystąpił nieokreślony błąd 1');
 	}
 
@@ -471,7 +471,7 @@ function fileDownload() {
 			// Pobraliśmy już plik więc włączamy czyszczenie z powrotem
 			$(window).on("beforeunload", cleaner);
 		}
-		else if (this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
+		else if (typeof this.status !== 'undefined') setErrors('Połączenie zakończyło się statusem ' + this.status);
 		else setErrors('Wystąpił nieokreślony błąd 5');
 	}
 
