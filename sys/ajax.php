@@ -4,13 +4,13 @@ require_once('helpers.php'); // Pomocnicze funkcje
 require_once('autoloader.php'); // class autoloader
 
 // Wysłanie formularza
-if( isset($_POST['send']) && $_POST['send']=="true" ) {
-	$valid = new Validation; // Klasa sprawdzająca błędy
-	$errors = $valid->validateParams(); // Sprawdzenie parametrów
+if( isset($_POST['send']) && $_POST['send'] == "true" ) {
+	$validation = new Validation;
+	$errors = $validation->validateParams();
 	if(!empty($errors)) {
 		// Przygotowanie danych do zwrotu
 		$result['status'] = 'error';
-		$result['info'] = $valid->renderErrors($errors);
+		$result['info'] = $validation->renderErrors($errors);
 
 		echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 	} else {
@@ -27,36 +27,43 @@ if( isset($_POST['send']) && $_POST['send']=="true" ) {
 
 
 // Sprawdza folder
-if( isset($_POST['checkdir']) && $_POST['checkdir']=='true' )
+if( isset($_POST['checkDir']) && $_POST['checkDir'] == 'true' )
 {
-	// Sprawdza czy katalog jest pusty
-	if( emptyDir('../files_upload') ) {
-		$status = 'error';
-		$info = 'Brak plików w folderze.';
-	} else {// Zwracamy liczbę plików z katalogu
-		$status = 'success';
-		$countFiles = count(glob('../files_upload/*'));
-		$info = $countFiles;
+	$pathToUploadDir = '../files_upload';
+
+	$result = [
+		'fileCount' => 0,
+		'status' => 'error',
+    	'info' => 'Folder nie istnieje.',
+	];
+
+	if (is_dir($pathToUploadDir)) {
+		$countFiles = count(glob("$pathToUploadDir/*"));
+		$result['fileCount'] = $countFiles;
+
+		if ($countFiles > 0) {
+			$result['status'] = 'success';
+			$result['info'] = "Liczba plików: $countFiles";
+		} else {
+			$result['info'] = 'Brak plików w folderze.';
+		}
 	}
 
-	//Zwracamy wyniki
-	$result['status'] = $status;
-	$result['info'] = $info;
 	echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 }
 
 
 
 // Zmiana rozmiaru plików
-if(isset($_POST['resize']) && $_POST['resize']=='true' && !empty($_POST['resizeNo'])) {
+if(isset($_POST['resize']) && $_POST['resize'] == 'true' && $_POST['resizeNumber'] >= 0) {
 	$resize = new Resize;
 
 	if( $resize->getFiles() ) {
-		$info = $resize->changeSize($_POST['resizeNo']);
+		$info = $resize->changeSize($_POST['resizeNumber']);
 		$result['status'] = 'success';
 	} else {
 		$result['status'] = 'errors';
-		$result['info'] = 'Nie udało się zmienić rozmiaru plikó.';
+		$result['info'] = 'Nie udało się zmienić rozmiaru plików.';
 	}
 
 	echo json_encode($result, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -64,7 +71,7 @@ if(isset($_POST['resize']) && $_POST['resize']=='true' && !empty($_POST['resizeN
 
 
 // Przygotowanie pliku zip
-if( isset($_POST['zip']) && $_POST['zip']=='true' ) {
+if( isset($_POST['zip']) && $_POST['zip'] == 'true' ) {
 	$blad = '';
 
 	$zipper = new Zipper;
@@ -91,9 +98,26 @@ if( isset($_POST['zip']) && $_POST['zip']=='true' ) {
 }
 
 
+// Pobranie pliku
+if (isset($_GET['download']) && $_GET['download'] == 'true') {
+    $file = '../miniatures/images.zip';
+
+    if (file_exists($file)) {
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="images.zip"');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+        exit;
+    } else {
+        http_response_code(404);
+        echo "Plik nie istnieje!";
+    }
+}
+
+
 
 // Czyszczenie katalogów
-if( isset($_POST['clean']) && $_POST['clean']=="true" ) {
+if( isset($_POST['clean']) && $_POST['clean'] == "true" ) {
 	clearDir('../files_upload');
 	clearDir('../miniatures');
 }

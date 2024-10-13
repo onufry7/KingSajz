@@ -3,14 +3,14 @@
 
 class Upload
 {
-	private $info = []; // Info przesyłania plików
-	private $files; // Tablica z plikami
+	private $files;
+	private $info = []; // Info z przesyłania plików
+	private $allowExtensions = ['jpeg', 'jpg', 'png', 'gif'];
+	private $fileUploadPath = '../files_upload/';
 
 	public function __construct($files)
 	{
-		// Zapisujemy tablice files
 		$this->files = $this->convertFilesArray($files);
-		// Ustawiamy błąd rozszerzenia
 		$this->checkExtensions();
 	}
 
@@ -19,24 +19,18 @@ class Upload
 	// Upload plików
 	public function uploadFiles()
 	{
-		for($i=0; $i<count($this->files); $i++) {
-			$file = $this->files[$i];
-			$err = $this->files[$i]['error'];
-			$name = $this->files[$i]['name'];
-			$tmp_name = $this->files[$i]['tmp_name'];
-			$status = 'ERR'; // Domyślny status ustawiony na błąd
-			$uploadDir = '../files_upload/'; // Folder uploadu
+		foreach($this->files as $file)
+		{
+			$err = $file['error'];
+			$name = $file['name'];
+			$tmp_name = $file['tmp_name'];
+			$status = 'ERR';
 
 			// Sprawdzamy błędy
-			if ( $err == 0 ) {
-				// Przesłanie pliku na server
-				$result = move_uploaded_file($tmp_name, $uploadDir.$name);
-				// Jeśli wystąpił błąd
-				if ($result != 1) {
-					$err = 10;
-				} else {
-					$status = 'OK';
-				}
+			if ( $err == 0 && move_uploaded_file($tmp_name, $this->fileUploadPath.$name)) {
+				$status = 'OK';
+			} else {
+				$err = 10;
 			}
 
 			// Zapisanie info do tablicy zerowanie zmiennej błędu
@@ -44,7 +38,6 @@ class Upload
 			$this->info[] = ['name'=>$name,'status'=>$status,'info'=>$message];
 			unset($message);
 		}
-		return $this->info;
 	}
 
 
@@ -85,129 +78,46 @@ class Upload
 	// Ustawia błąd rozszerzenie pliku
 	private function checkExtensions()
 	{
-		# Dodanie rozszerzenia w tablicy $extensions
+		# Dodanie rozszerzenia w tablicy $this->allowExtensions
 		# wymaga dodania odpowiedniej metody do obsługi
 		# tego rozszerzenia w klasie Resize.
 
-		// Dozwolone rozszerzenia
-		$extensions = ['jpeg','jpg','png','gif'];
+		foreach ($this->files as &$file) {
+			$fileExt = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-		// Sprawdzamy rozszerzenie pliku
-		for($i=0; $i<count($this->files); $i++) {
-			// Pobieramy rozszerzenie z nazwy pliku
-			$fileExt = explode('.', $this->files[$i]['name']);
-			$fileExt = end($fileExt);
-			// Jeśli nie ma na liście to error na 9
-			if ( !in_array($fileExt,$extensions) ) {
-				$this->files[$i]['error'] = 9;
+			if (!in_array($fileExt, $this->allowExtensions)) {
+				$file['error'] = 9;
 			}
 		}
 	}
 
 
-
-
-
-
-	// Podsumowanie uploadu plików TODO Do weryfikacji, uproszczenia refraktoryzacji
-	public function uploadInfo($files, $typ = 'all', $info = false)
+	public function uploadInfo()
 	{
-		$fileError = []; //  Pliki z błędami
-		$fileSucces = []; // Pliki bez błędów
+		$result['all']['count'] = 0;
+		$result['errors']['count'] = 0;
+		$result['errors']['files'] = [];
+		$result['success']['count'] = 0;
+		$result['success']['files'] = [];
 
-		// Przypisanie do typów
-		for($i=0;$i<count($files);$i++)
+		foreach($this->info as $fileInfo)
 		{
-			if($files[$i]['status'] == 'ERR') $fileError[] = $files[$i];
-			else if($files[$i]['status'] == 'OK') $fileSucces[] = $files[$i];
+			if($fileInfo['status'] == 'ERR') {
+
+				$result['errors']['files'][] = $fileInfo['name'];
+				$result['errors']['count']++;
+
+			} elseif ($fileInfo['status'] == 'OK') {
+
+				$result['success']['files'][] = $fileInfo['name'];
+				$result['success']['count']++;
+
+			}
 		}
 
-		// Liczba poszczególnych typów
-		$errCount = count($fileError);
-		$okCount = count($fileSucces);
-		$allCount = count($files);
+		$result['all']['count'] = $result['errors']['count'] + $result['success']['count'];
 
-		// Typ podsumowania
-		switch ($typ)
-		{
-			// dla odrzuconyvch i błędnych plików
-			case 'err':
-				$result = '<div class="upload-summary-err">Pliki odrzucone: ';
-				$result .= $errCount.'<ul>';
-
-				if($errCount > 0)
-				{
-					foreach ($fileError as $key => $value)
-						$result .= '<li>'.$value['file'].' => '.$value['info'].'</li>';
-				}
-
-				$result .= '</ul><div>';
-				break;
-
-
-			// Dla poprawnie przetworzonych
-			case 'ok':
-				$result = '<div class="upload-summary-ok">Pliki poprawne: ';
-				$result .= $okCount.'<ul>';
-
-				if($okCount > 0)
-				{
-					foreach ($fileSucces as $key => $value)
-						$result .= '<li>'.$value['file'].' => '.$value['info'].'</li>';
-				}
-
-				$result .= '</ul><div>';
-				break;
-
-
-			// Krótkie podsumowanie o przeslanych i odrzuconych razem
-			case 'short':
-				$result = '<div class="upload-summary-short"><ul>';
-				$result .= '<li>Pliki przesłane: '.$allCount.'</li>';
-				$result .= '<li>Pliki odrzucone: '.$errCount.'</li>';
-				$result .= '<li>Pliki poprawne: '.$okCount.'</li>';
-				$result .= '</ul></div>';
-				return  $result; // Odrazu zwracamy wynik
-				break;
-
-
-			default:
-				$result = '<div class="upload-summary-all">Przesłane pliki: ';
-				$result .= $allCount.'<ul>';
-
-				if($allCount > 0)
-				{
-					foreach ($files as $key => $value)
-						$result .= '<li>'.$value['file'].' => '.$value['info'].'</li>';
-				}
-
-				$result .= '</ul><div>';
-				break;
-		}
-
-
-		// Dodatkowe podsumowanie
-		if($info == true)
-		{
-			$summaryEx = '<div class="upload-summary-extra"><ul>';
-			$summaryEx .= '<li>Wszystkich plików: '.$allCount.'</li>';
-			$summaryEx .= '<li>Poprawnych plików: '.$okCount.'</li>';
-			$summaryEx .= '<li>Plików z błędami: '.$errCount.'</li>';
-			$summaryEx .= '</ul></div>';
-		}
-
-		// Wynik
-		$summary = '<div  class="upload-summary">';
-		$summary .= $result;
-		if(isset($summaryEx)) $summary .= $summaryEx;
-		$summary .= '</div>';
-
-		return $summary;
+		return $result;
 	}
 
-
 }
-
-
-
-?>

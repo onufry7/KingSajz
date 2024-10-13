@@ -39,16 +39,14 @@ class Resize
 	public function getFiles()
 	{
 		if ( is_dir($this->srcIn) ) {
-			// Skanujemy folder w poszukiwaniu plików
 			foreach (glob("$this->srcIn/*") as $file) {
-				// i zapisujemy pliki do tablicy
 				if ( is_file($file) ) {
 					$this->files[] = $file;
 				}
 			}
 			return true;
 		} else {
-			return false; // Jeśli inne niż folder
+			return false;
 		}
 	}
 
@@ -57,7 +55,6 @@ class Resize
 	// Zmienia rozmiar pliku
 	public function changeSize($no)
 	{
-		$no = $no-1;
 		$file = $this->files[$no];
 
 		if ( is_file($file) ) {
@@ -169,8 +166,6 @@ class Resize
 					}
 
 					break;
-
-
 
 				case 'px':
 				default:

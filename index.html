@@ -22,7 +22,7 @@
 
 		<form enctype="multipart/form-data" method="POST" id="form">
 
-			<fieldset class="fild unit">
+			<fieldset class="field unit">
 				<legend> Jednostka </legend>
 				<span id="vUnit" class="valid"></span>
 				<label><input type="radio" name="unit" value="percent"> %</label>
@@ -31,23 +31,29 @@
 				<label><input type="radio" name="unit" value="mm"> mm</label>
 			</fieldset>
 
-			<fieldset class="fild scale">
+			<fieldset class="field scale">
 				<legend> Skala </legend>
 				<span id="vScale" class="valid"></span>
-				<div class="row"><label><input type="radio" name="scale" value="none" checked> Brak </label></div>
-				<br>
-				<div class="row"><label><input type="radio" name="scale" value="width"> Zachowaj szerokość </label>
-				</div>
-				<div class="row"><label><input type="radio" name="scale" value="height"> Zachowaj wysokość </label>
+				<div class="row">
+					<label><input type="radio" name="scale" value="none" checked> Brak </label>
 				</div>
 				<br>
-				<div class="row"><label><input type="radio" name="scale" value="s-width"> Skaluj szerokość </label>
+				<div class="row">
+					<label><input type="radio" name="scale" value="width"> Zachowaj szerokość </label>
 				</div>
-				<div class="row"><label><input type="radio" name="scale" value="s-height"> Skaluj wysokość </label>
+				<div class="row">
+					<label><input type="radio" name="scale" value="height"> Zachowaj wysokość </label>
+				</div>
+				<br>
+				<div class="row">
+					<label><input type="radio" name="scale" value="s-width"> Skaluj szerokość </label>
+				</div>
+				<div class="row">
+					<label><input type="radio" name="scale" value="s-height"> Skaluj wysokość </label>
 				</div>
 			</fieldset>
 
-			<fieldset class="fild size">
+			<fieldset class="field size">
 				<legend> Wymiary </legend>
 				<span id="vSize" class="valid"></span>
 				<div class="row" id="szerokosc">
@@ -64,31 +70,28 @@
 				</div>
 			</fieldset>
 
-			<div class="fild">
+			<div class="field">
 				<span id="vFiles" class="valid"></span>
 				<label>Plik/i:
 					<input type="file" id="file" name="file" multiple accept="image/x-png,image/gif,image/jpeg">
 				</label>
 			</div>
 
-			<input type="hidden" name="count" id="count" value="">
-
-			<div class="submitFild">
+			<div class="submitField">
 				<input type="submit" name="submit" value="Wyślij" class="button">
 			</div>
 
 		</form>
 
 
-		<div id="console">
+		<div id="dashboard">
 			<div id="status">Status</div>
 
-			<div id="errors"></div>
-			<div id="info"></div>
-
-			<div id="loader"></div>
+			<div id="messages"></div>
 
 			<div id="link"></div>
+
+			<div id="loader"></div>
 
 			<div id="progresy">
 				<p>Wysyłanie: <progress id="uploadBar" value="0" max="100"></progress></p>

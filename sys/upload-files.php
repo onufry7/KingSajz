@@ -6,7 +6,6 @@ require_once('autoloader.php');
 if( isset($_FILES['files']) )
 {
 	$upload = new Upload($_FILES['files']);
-	$info = $upload->uploadFiles();
-	$info = $upload->uploadInfo($info,'short',false);
-	echo $info;
+	$upload->uploadFiles();
+	echo json_encode($upload->uploadInfo(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 }
