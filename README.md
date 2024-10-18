@@ -8,6 +8,18 @@ Wymaga do działania biblioteki gd i zip
 - w php.ini odblokować: z ;extension=gd na extension=gd
 - w php.ini odblokować: z ;extension=zip na extension=zip
 
+Aby aplikacja działała prawidłowo należy utworzyć w głównym folderze aplikacji foldery files_upload i miniatures:
+
+```bash
+mkdir miniatures
+chmod 775 miniatures
+```
+
+```bash
+mkdir miniatures
+chmod 775 miniatures
+```
+
 ## Obsługa
 
 Możemy ustawić jednostkę wielkości dla plików wynikowych.

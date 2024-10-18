@@ -294,13 +294,13 @@ async function triggerActionByStatus(status) {
 
 	switch (status) {
 		case Statuses.SENDING_FORM:
+			showLoadingSpinner();
 			sendForm();
 			break;
 
 		case Statuses.PREPARING_FILES:
 			disabledFormInputs(true);
 			clearValidationErrors();
-			showLoadingSpinner();
 			filesUpload();
 			break;
 
