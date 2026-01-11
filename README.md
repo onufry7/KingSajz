@@ -11,8 +11,8 @@ Wymaga do działania biblioteki gd i zip
 Aby aplikacja działała prawidłowo należy utworzyć w głównym folderze aplikacji foldery files_upload i miniatures:
 
 ```bash
-mkdir miniatures
-chmod 775 miniatures
+mkdir files_upload
+chmod 775 files_upload
 ```
 
 ```bash
